@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      div {
+        display: inline-block;
+        width: 100px;
+        height: 100px;
+        margin: 30px;
+        border-radius: 50px;
+        background-color: gainsboro;
+      }
+      .green.light {
+        background-color: greenyellow;
+      }
+      .yellow.light {
+        background-color: yellow;
+      }
+      .red.light {
+        background-color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="green"></div>
+    <div class="yellow"></div>
+    <div class="red"></div>
+    <button id='next'>next</button>
+    <script>
+      function removeLight() {
+        var lights = document.getElementsByTagName('div');
+        for (var i = 0; i < 3; i++) {
+          lights[i].classList.remove('light');
+        }
+      }
+      function green() {
+        removeLight();
+        document.getElementsByClassName('green')[0].classList.add('light');
+      }
+      function red() {
+        removeLight();
+        document.getElementsByClassName('red')[0].classList.add('light');
+      }
+      function yellow() {
+        removeLight();
+        document.getElementsByClassName('yellow')[0].classList.add('light');
+      }
+      function sleep(t) {
+        return new Promise((resolve, reject) => {
+          setTimeout(resolve, t);
+        });
+      }
+      function happen(element, eventName) {
+        return new Promise((resolve, reject) => {
+          element.addEventListener(eventName, resolve, {once: true});
+        });
+      }
+      // async/await 的异步处理方式
+      // async function go() {
+      //   while(true) {
+      //     green();
+      //     await sleep(4000);
+      //     yellow();
+      //     await sleep(2000);
+      //     red();
+      //     await sleep(3000);
+      //   }
+      // }
+      async function go() {
+        const _next = document.getElementById('next');
+        while(true) {
+          green();
+          await happen(_next, 'click');
+          yellow();
+          await happen(_next, 'click');
+          red();
+          await happen(_next, 'click');
+        }
+      }
+      go();
+    </script>
+  </body>
+</html>

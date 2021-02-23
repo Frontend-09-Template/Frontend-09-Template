@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      div {
+        display: inline-block;
+        width: 100px;
+        height: 100px;
+        margin: 30px;
+        border-radius: 50px;
+        background-color: gainsboro;
+      }
+      .green.light {
+        background-color: greenyellow;
+      }
+      .yellow.light {
+        background-color: yellow;
+      }
+      .red.light {
+        background-color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="green"></div>
+    <div class="yellow"></div>
+    <div class="red"></div>
+    <script>
+      function removeLight() {
+        var lights = document.getElementsByTagName('div');
+        for (var i = 0; i < 3; i++) {
+          lights[i].classList.remove('light');
+        }
+      }
+      function green() {
+        removeLight();
+        document.getElementsByClassName('green')[0].classList.add('light');
+      }
+      function red() {
+        removeLight();
+        document.getElementsByClassName('red')[0].classList.add('light');
+      }
+      function yellow() {
+        removeLight();
+        document.getElementsByClassName('yellow')[0].classList.add('light');
+      }
+      function sleep(t) {
+        return new Promise((resolve, reject) => {
+          setTimeout(resolve, t);
+        });
+      }
+      // promise的处理异步的方式
+      function go() {
+        green();
+        sleep(4000).then(() => {
+          yellow();
+          return sleep(2000);
+        }).then(() => {
+          red();
+          return sleep(3000);
+        }).then(go);
+      }
+      go();
+    </script>
+  </body>
+</html>
