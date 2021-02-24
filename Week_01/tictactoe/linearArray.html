@@ -20,9 +20,9 @@
     <div id="board"></div>
     <script>
       let pattern = [
-        [2, 0, 0],
-        [0, 1, 0],
-        [0, 0, 0],
+        0, 0, 0,
+        0, 0, 0,
+        0, 0, 0,
       ];
       let color = 1;
 
@@ -34,8 +34,8 @@
             let cell = document.createElement('div');
             cell.classList.add('cell');
             cell.innerText = 
-              pattern[i][j] == 2 ? "❌" :
-              pattern[i][j] == 1 ? "⭕" : "";
+              pattern[i * 3 + j] == 2 ? "❌" :
+              pattern[i * 3 + j] == 1 ? "⭕" : "";
             cell.addEventListener('click', () => move(j, i)); // 监听事件
             board.appendChild(cell);
           }
@@ -44,12 +44,11 @@
       }
 
       function move(x, y) {
-        pattern[y][x] = color;
+        pattern[y * 3 + x] = color;
         if (check(pattern, color)) {
           alert(color === 2 ? "❌ is winner" : "⭕ is winner");
         }
         color = 3 - color;
-        console.log(bestChoice(pattern, color));
         show();
         if(willWin(pattern, color)) {
             alert(color == 2 ? "❌ will win!" : "⭕ will win!")
@@ -61,7 +60,7 @@
         for(let i = 0; i < 3; i++){
           let win = true;
           for(let j = 0; j < 3; j++){
-            if (pattern[i][j] !== color) {
+            if (pattern[i * 3 + j] !== color) {
               win = false;
             }
           }
@@ -74,7 +73,7 @@
         for(let i = 0; i < 3; i++){
           let win = true;
           for(let j = 0; j < 3; j++){
-            if (pattern[j][i] !== color) {
+            if (pattern[j*3 + i] !== color) {
               win = false;
             }
           }
@@ -85,19 +84,17 @@
         }
 
         // 2对角线
-        // 横纵坐标相等
         {
           let win = true;
           for(let i = 0; i < 3; i++) {
-            if(pattern[i][i] !== color) win = false;
+            if(pattern[i * 3 + i] !== color) win = false;
           }
           if(win) return true;
         }
-        // i + j 等于2
         {
           let win = true;
           for(let i = 0; i < 3; i++) {
-            if(pattern[i][2-i] !== color) win = false;
+            if(pattern[i * 2 + 2] !== color) win = false;
           }
           if(win) return true;
         }
@@ -105,54 +102,23 @@
       }
 
       function clone(pattern) {
-        return JSON.parse(JSON.stringify(pattern));
+        // return JSON.parse(JSON.stringify(pattern));
+        return Object.create(pattern);
       }
 
       function willWin(pattern, color) {
         for(let i = 0; i < 3; i++) {
           for(let j = 0; j < 3; j++){
-            if(pattern[i][j]) continue;
+            if(pattern[i * 3 + j]) continue;
             let temp = clone(pattern);
-            temp[i][j] = color;
-            if (check(temp, color)) return [j, i];
+            temp[i * 3 + j] = color;
+            if (check(temp, color)) return true;
           }
         }
-        return null;
-      }
-
-      function bestChoice(pattern, color) {
-        let p; // 位置
-        let result = -2; // 结果 0表示和 1表示赢 -1表示输
-        let point = null;
-        if (p = willWin(pattern, color)) {
-          return {
-            point: p,
-            result: 1,
-          };
-        }
-        outer:for(let i = 0; i < 3; i++) {
-          for(let j = 0; j < 3; j++){
-            if(pattern[i][j]) continue;
-            let temp = clone(pattern);
-            temp[i][j] = color;
-            let r = bestChoice(temp, 3 - color).result;  // 落子后去判断对方的最佳策略
-            if (- r > result) {
-              result = - r;    // 对方的最差策略即我方的最佳策略
-              point = [j, i];
-            }
-            if (result === 1) {
-              break outer;
-            }
-          }
-        }
-        return {
-          point,
-          result: point ? result : 0,
-        }
+        return false;
       }
 
       show();
-      console.log(bestChoice(pattern, color));
     </script>
   </body>
 </html>
