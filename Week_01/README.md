@@ -60,7 +60,7 @@ async function* counter() {
 // Promise {pending} 每隔一秒i + 1; 从0开始输出 0 1 2 3 ...
 ```
 # 前端知识脑图
-![前端知识框架](https://github.com/ChengYiFan/Frontend-09-Template/tree/main/Week_01/脑图.jpg)
+![前端知识框架](https://github.com/ChengYiFan/Frontend-09-Template/blob/main/Week_01/%E8%84%91%E5%9B%BE.jpg)
 
 # 文档结构
 ```shell
