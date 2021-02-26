@@ -59,12 +59,15 @@ async function* counter() {
 })();
 // Promise {pending} 每隔一秒i + 1; 从0开始输出 0 1 2 3 ...
 ```
+# 前端知识脑图
+![前端知识框架](https://github.com/ChengYiFan/Frontend-09-Template/tree/main/Week_01/脑图.jpg)
 
 # 文档结构
 ```shell
 .
 ├── README.md                      // 说明
 ├── NODE.md                        // 学习笔记
+├── 脑图.xmind                     
 ├── ASYNC                          // 异步编程-实现红绿灯
 │   ├── redgreen.html              // 传统的异步处理方式
 │   ├── promise.html               // promise异步处理方式
