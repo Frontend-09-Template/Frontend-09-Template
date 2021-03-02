@@ -23,7 +23,7 @@
 
 **胜出预判**
 1. AI 能力 循环遍历数组，判断是否存在空节点，深拷贝数组，继而对该空节点赋值color，然后进行胜负判断
-1. 使用JSON.parse(JSON.stringify())实现深拷贝
+1. 使用JSON.parse(JSON.stringify())或Object.create()实现深拷贝
 
 **完美AI的策略**
 1. 第一层：我要赢

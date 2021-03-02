@@ -126,7 +126,7 @@
             if(pattern[i * 3 + j]) continue;
             let temp = clone(pattern);
             temp[i * 3 + j] = color;
-            if (check(temp, color)) return true;
+            if (check(temp, color)) return [j, i];
           }
         }
         return false;

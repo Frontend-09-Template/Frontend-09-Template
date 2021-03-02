@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #container {
+        width: 701px;
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .cell {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background-color: silver;
+        border-bottom: 1px solid white;
+        border-right: 1px solid white;
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <button onclick="localStorage['map'] = JSON.stringify(map)">save</button>
+    <script>
+      // 初始化地图数据
+      let map = localStorage['map'] ? JSON.parse(localStorage['map']) : Array(10000).fill(0);
+      let container = document.getElementById("container");
+      // 绘制地图
+      for(let y = 0; y < 100; y++) {
+        for(let x = 0; x < 100; x++) {
+          let cell = document.createElement("div");
+          cell.classList.add("cell");
+          if (map[100*y + x] === 1) {
+            cell.style.backgroundColor = "black";
+          }
+          cell.addEventListener("mousemove", () => {
+            if (mousedown) {
+              if (clear) {
+                cell.style.backgroundColor = "";
+                map[100*y + x] = 0;
+              } else {
+                cell.style.backgroundColor = "black";
+                map[100*y + x] = 1;
+              }
+            }
+          });
+          container.appendChild(cell);
+        }
+      }
+
+      let mousedown = false;
+      let clear = false;
+      document.addEventListener("mousedown", e => {
+        mousedown = true;
+        clear = (e.which === 3)
+      });
+      document.addEventListener("mouseup", () => mousedown = false);
+      document.addEventListener("contextmenu", e => e.preventDefault());  // 因为要使用鼠标右键，所以阻止contextmenu的默认事件
+
+      function sleep(t) {
+        return new Promise((resolve) => {
+          setTimeout(resolve, t);
+        });
+      }
+      // 寻路算法
+      async function findPath(map, start, end) {
+        // 所有搜索算法的灵魂，队列, diff部分
+        let table = Object.create(map);
+        var queue = [start];
+        // 入队
+        async function insert(x, y, pre) {
+          if (x < 0 || x >= 100 || y < 0 || y >= 100) {
+            return;
+          }
+      
+          if(table[y * 100 + x]) {
+            return;
+          }
+          // await sleep(1);
+          container.children[y * 100 + x].style.backgroundColor = "lightgreen";
+          table[y * 100 + x] = pre;
+          queue.push([x, y]);
+        }
+        while(queue.length) {
+          let [x,y] = queue.shift();
+          if (x === end[0] && y === end[1]) {
+            let path = [];
+            while(x != start[0] || y != start[1]) {
+              path.push(map[y * 100 + x]);
+              [x, y] = table[y * 100 + x];   // 结构赋值
+              await sleep(30);
+              container.children[y * 100 + x].style.backgroundColor = "purple";
+            }
+            return path;
+          }
+          await insert(x - 1, y, [x, y]);  // 上
+          await insert(x, y - 1, [x, y]);  // 左
+          await insert(x + 1, y, [x, y]);  // 下
+          await insert(x, y + 1, [x, y]);  // 右
+
+          await insert(x - 1, y - 1, [x, y]); // 左上
+          await insert(x + 1, y - 1, [x, y]); // 左下
+          await insert(x - 1, y + 1, [x, y]); // 右上
+          await insert(x + 1, y + 1, [x, y]); // 右下
+        }
+        return null;
+      }
+      // findPath(map, [0,0], [50,50]);
+    </script>
+  </body>
+</html>
