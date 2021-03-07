@@ -118,7 +118,10 @@
         }
       }
     }
-
+    
+    /**
+     * 绘制路径
+     */
     async findPath(map, start, end) {
       let queue = new Sorted([start], (a, b) => distance(a) - distance(b)), _that = this, table = Object.create(map);
       function distance(point) {
