@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>地图</title>
+</head>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  .cell {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background-color: gray;
+    border-bottom: 1px solid white;
+    border-right: 1px solid white;
+    vertical-align: middle;
+  }
+
+  #map {
+    font-size: 0px;
+    width: 701px;
+  }
+</style>
+  <div id="map"></div>
+  <button onclick="localStorage.setItem('map', JSON.stringify(mapPage.map))">
+    save
+  </button>
+</body>
+<script>
+  class Sorted {
+    constructor(data, compare) {
+      this.data = data.slice();
+      this.compare = compare || ((a, b) => a - b);
+    }
+
+    stake() {
+      if (!this.data.length) {
+        return;
+      }
+      let min = this.data[0];
+      let minIndex = 0;
+      for (let k = 1; k < this.data.length; k++) {
+        if (this.compare(this.data[k], min) < 0) {
+          min = this.data[k];
+          minIndex = k;
+        }
+      }
+      this.data[minIndex] = this.data[this.data.length - 1];
+      this.data.pop();
+      return min;
+    }
+
+    give(v) {
+      this.data.push(v);
+    }
+  }
+
+  class MAPPAGE {
+    constructor() {
+      this.map = localStorage.getItem('map') ? JSON.parse(localStorage.getItem('map')) : Array(10000).fill(0);
+      this.mousedown = false;
+      this.clear = false;
+      this.container = document.getElementById('map');
+    }
+
+    sleep(time) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve();
+        }, time);
+      })
+    }
+
+    init() {
+      document.addEventListener('mousedown', (e) => {
+        this.mousedown = true;
+        this.clear = e.button === 2;
+      })
+      document.addEventListener('mouseup', () => {
+        this.mousedown = false;
+      })
+      document.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+      })
+      this.drawMap();
+    }
+
+    /**
+     * 绘制地图
+     */
+    drawMap() {
+      for (let y = 0; y < 100; y++) {
+        for (let x = 0; x < 100; x++) {
+          let box = document.createElement('div');
+          box.classList.add('cell');
+          if(this.map[100 * y + x] === 1) {
+            box.style.backgroundColor = "black";
+          }
+          box.addEventListener('mousemove', () => {
+            if (this.mousedown) {
+              if (this.clear) {
+                this.map[y * 100 + x] = 0;
+                box.style.backgroundColor = 'gray';
+              } else {
+                this.map[y * 100 + x] = 1;
+                box.style.backgroundColor = "black";
+              }
+            }
+          })
+          this.container.appendChild(box);
+        }
+      }
+    }
+    
+    /**
+     * 绘制路径
+     */
+    async findPath(map, start, end) {
+      let queue = new Sorted([start], (a, b) => distance(a) - distance(b)), _that = this, table = Object.create(map);
+      function distance(point) {
+        console.log(end);
+        return (point[0] - end[0]) ** 2 + (point[1] - end[1]) ** 2;
+      }
+
+      async function insert(x, y, pre) {
+        if (x < 0 || x >= 100 || y < 0 || y >= 100) {
+          return;
+        }
+        if (table[y * 100 + x]) {
+          return;
+        }
+        _that.container.children[y * 100 + x].style.backgroundColor = 'lightgreen';
+        // map[y * 100 + x] = 2;
+        table[y * 100 + x] = pre;
+        queue.give([x, y])
+      }
+      while(queue.data.length) {
+        let [x, y] = queue.stake();
+        console.log(x, y);
+        if (x === end[0] && y === end[1]) {
+          let path = [];
+          while(x !== start[0] || y !== start[1]) {
+            path.push(map[y * 100 + x]);
+            [x, y] = table[y * 100 + x];
+            await _that.sleep(30);
+            _that.container.children[y * 100 + x].style.backgroundColor = 'purple';
+          }
+          return path;
+        }
+        await insert(x - 1, y, [x, y]);
+        await insert(x, y - 1, [x, y]);
+        await insert(x + 1, y, [x, y]);
+        await insert(x, y + 1, [x, y]);
+        await insert(x - 1, y - 1, [x, y]);
+        await insert(x + 1, y - 1, [x, y]);
+        await insert(x + 1, y + 1, [x, y]);
+        await insert(x - 1, y + 1, [x, y]);
+      }
+      return null;
+    }
+  }
+
+  var mapPage = new MAPPAGE();
+  mapPage.init();
+  mapPage.findPath(mapPage.map, [0, 0], [70, 70]);
+</script>
+</html>

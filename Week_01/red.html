@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>红绿灯</title>
+</head>
+<style>
+  *{
+    margin: 0;
+    padding: 0;
+  }
+
+  .light-content {
+    display: flex;
+  }
+
+  .light-content div {
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    background: #C5C2C2;
+  }
+</style>
+<body>
+  <div class="light-content">
+    <div class="light1"></div>
+    <div class="light2"></div>
+    <div class="light3"></div>
+  </div>
+</body>
+<script>
+  let lightDiv = document.getElementsByClassName('light-content')[0].getElementsByTagName('div');
+  /**
+   * 设置红绿灯颜色
+   **/
+  function setBackGround(className, color) {
+    for (const item of lightDiv) {
+      item.setAttribute('style', 'background: #C5C2C2');
+    }
+    let light = document.getElementsByClassName(className);
+    light[0].setAttribute('style', `background:${color}`);
+  }
+
+  /**
+   * 定时异步
+   **/
+  function sleep(time) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+      }, time);
+    })
+  }
+
+  /**
+   * 异步循环
+   **/
+  async function run() {
+    
+    // sleep(1000 ).then(() => {
+    //   setBackGround('light1', 'red');
+    //   return sleep(2000);
+    // }).then(() => {
+    //   setBackGround('light2', 'green');
+    //   return sleep(3000);
+    // }).then(() => {
+    //   setBackGround('light3', 'yellow');
+    //   run();
+    // })
+
+
+    setBackGround('light1', 'red');
+    await sleep(1000);
+    setBackGround('light2', 'green');
+    await sleep(2000);
+    setBackGround('light3', 'yellow');
+    await sleep(3000);
+    run();
+  }
+  run();
+</script>
+</html>

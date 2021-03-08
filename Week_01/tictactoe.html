@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TicTacToe</title>
+</head>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  .box {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    background: green;
+    text-align: center;
+    font-size: 20px;
+    border: 1px solid #fff;
+    vertical-align: bottom;
+  }
+</style>
+<body>
+  <div id="plate"></div>
+</body>
+<script>
+class TicTacToe {
+  constructor () {
+    this.boxList = [
+      [0, 0, 2],
+      [0, 1, 0],
+      [0, 0, 0],
+    ];  
+    this.color = 1;
+  };
+
+  /*
+  * 绘制棋盘
+  */
+  showPlate () {
+    let {
+      boxList
+    } = this;
+    let plate = document.getElementById('plate');
+    plate.innerHTML = '';
+    for (let i = 0; i < boxList.length; i++) {
+      const row = boxList[i];
+      for (let j = 0; j < row.length; j++) {
+        const col = row[j];
+        let box = document.createElement('div');
+        box.className = 'box';
+        box.innerText = col == 1 ? '⭕️' : col == 2 ? '❌' : '';
+        box.addEventListener('click', () => this.move(i, j));
+        plate.appendChild(box);
+      }
+      plate.appendChild(document.createElement("br"))
+    };
+  };
+
+  /**
+   * 添加事件
+   * x 横行
+   * y 竖行
+   */
+  move(x, y) {
+    this.boxList[x][y] = this.color;
+    if (this.check(this.boxList, this.color)) {
+      alert(this.color === 1 ? "⭕️ 赢了" : "❌ 赢了")
+    }
+    this.color = 3 - this.color;
+    let result = this.bastChoice(this.boxList, this.color);
+    console.log(result);
+    if (this.willwin(this.boxList, this.color)) {
+      console.log(this.color === 1 ? "⭕️ 要赢" : "❌ 要赢");
+    };
+    this.showPlate();
+  };
+  
+  /**
+   * 校验是否即将成功
+   */
+  check(pattern, color) {
+    {
+      // 横行
+      for (let x = 0; x < pattern.length; x++) {
+        let win = true;
+        let row = pattern[x];
+        for (let y = 0; y < row.length; y++) {
+          const col = row[y];
+          if (col !== color) {
+            win = false;
+          }
+        }
+        if (win) {
+          return win;
+        }
+      }
+    }
+    
+    {
+      // 竖行
+      for (let k = 0; k < pattern.length; k++) {
+        let win = true;
+        let row = pattern[k];
+        for (let j = 0; j < row.length; j++) {
+          const val = pattern[j][k];
+          if (val !== color) {
+            win = false;
+          }
+        }
+        if (win) {
+          return win;
+        }
+      }
+    }
+    
+    {
+      // 左上角到右下角
+      let win = true;
+      for (let k = 0; k < pattern.length; k++) {
+        let val = pattern[k][k];
+        if (val !== color) {
+          win = false
+        }
+      }
+      if (win === true) {
+        return win;
+      }
+    }
+
+    {
+      // 右上角到左下角
+      let win = true;
+      for (let k = 0; k < pattern.length; k++) {
+        const val = pattern[k][2 - k];
+        if (val !== color) {
+          win = false;
+        }
+      }
+      if(win) {
+        return win;
+      }
+    }
+    return false;
+  };
+  
+  clone(pattern) {
+    return JSON.parse(JSON.stringify(pattern));
+  }
+
+  willwin(pattern, color) {
+    for (let x = 0; x < pattern.length; x++) {
+      const row = pattern[x];
+      for (let y = 0; y < row.length; y++) {
+        const col = row[y];
+        if (col) {
+          continue;
+        }
+        let cloneList = this.clone(pattern);
+        cloneList[x][y] = color;
+        if (this.check(cloneList, color)) {
+          return [x, y];
+        }
+      }
+    }
+    return null;
+  }
+
+  bastChoice(pattern, color) {
+    let p = null;
+    if (p = this.willwin(pattern, color)) {
+      return {
+        point: p,
+        result: 1 
+      }
+    }
+
+    let point = null;
+    let result = -2;
+    for (let k = 0; k < pattern.length; k++) {
+      const row = pattern[k];
+      for (let y = 0; y < row.length; y++) {
+        const col = row[y];
+        if (col) {
+          continue;
+        }
+        let cloneList = this.clone(pattern);
+        cloneList[k][y] = color;
+        let r = this.bastChoice(cloneList, 3 - color).result;
+        if (-r > result) {
+          result = -r;
+          point = [row, col];
+        }
+      }
+    }
+    return {
+      point: point,
+      result: point ? result : 0
+    }
+  }
+}
+let ticTacToe = new TicTacToe();
+ticTacToe.showPlate();
+</script>
+</html>
