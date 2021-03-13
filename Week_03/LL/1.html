@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+  </head>
+  <body>
+    <script>
+      // 以或关系分开的
+      var regexp = /([0-9\.]+)|([ \t]+)|([\r\n]+)|(\*)|(\/)|(\+)|(\-)/g;
+      // 定义扫描出来的token名
+      var dirtionary = ['Number', 'Whitespace', 'LineTerminator', '*', '/', '+', '-'];
+
+      function tokenize(source) {
+        var result = null;
+
+        while(true) {
+          result = regexp.exec(source);
+          if (!result) break;
+          for (let i = 1; i <= dirtionary.length; i++) {
+            if (result[i]) {
+              console.log(dirtionary[i-1]);
+            }
+          }
+          console.log(result);
+        }
+      }
+
+      tokenize('1024 + 10 * 25')
+    </script>
+  </body>
+</html>
