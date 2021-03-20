@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>KMP算法</title>
+  </head>
+  <body>
+    <script>
+      function kmp(source, pattern) {
+        // 计算跳转表格
+        // let table = Array.from(Array(patten.length)).fill(0);
+        let table = [...Array(pattern.length)].fill(0);
+        
+        {
+          let i = 1;
+          let j = 0;
+
+          while(i < pattern.length) {
+            if (pattern[i] === pattern[j]) {  // 匹配上了
+              ++j, ++i;
+              table[i] = j;
+            } else {
+              if (j > 0) {
+                j = table[j];
+              } else {
+                ++i;
+              }
+            }
+          }
+        }
+        console.log(table);
+        // 匹配
+        {
+          let i = 0;   // source串的位置
+          let j = 0;   // pattern串的位置
+          while(i < source.length) {
+            // 匹配的情况
+            if (pattern[j] === source[i]) {
+              ++i, ++j;  // 前进一格
+            } else {
+              if (j > 0 ) {
+                j = table[i];
+              } else {
+                ++i;
+              }
+            }
+            if (j === pattern.length) {
+              return true;
+            }
+          }
+          return false;
+        }
+      }
+      // kmp("", "abcdabce");
+      // kmp("", "aabaaac");
+      console.log(kmp('hello', 'll'));
+      console.log(kmp('abckerabcdabce', 'abcdabce'));
+    </script>
+  </body>
+</html>
