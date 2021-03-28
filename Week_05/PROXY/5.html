@@ -1,16 +1,17 @@
 <script>
   let callbacks = new Map();
+  let reactivties = new Map();
   let useReactives = [];
 
   let object = {
-    a: 1,
+    a: {b: 3},
     b: 2
   };
 
   let po = reactive(object);
 
   effect(() => {
-    console.log('effect:', po.a);
+    console.log('effect:', po.a.b);
   });
 
   function effect(callback) {
@@ -32,7 +33,12 @@
   }
 
   function reactive(object) {
-    return new Proxy(object, {
+    // 添加缓存
+    if (reactivties.has(object)) {
+      return reactivties.get(object);
+    }
+
+    let proxy = new Proxy(object, {
       set(obj, prop, val) {
         obj[prop] = val;
         if (callbacks.get(obj)) {
@@ -47,9 +53,15 @@
       get(obj, prop) {
         console.log('get:', obj, prop);
         useReactives.push([obj, prop]);
+        if (typeof obj[prop] === 'object')
+          return reactive(obj[prop]);
+
         return obj[prop];
       }
     });
+
+    reactivties.set(object, proxy);
+    return proxy;
   }
 
 </script>

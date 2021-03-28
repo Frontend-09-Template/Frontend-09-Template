@@ -1,0 +1,20 @@
+<script>
+  let object = {
+    a: 3,
+    b: 1,
+  };
+
+  let po = new Proxy(object, {
+    set(obj, prop, val) {
+      obj[prop] = val;
+      console.log(val);
+    },
+    get(obj, prop) {
+      return obj[prop];
+    },
+    deleteProperty(obj, prop) {
+      console.log(obj[prop]);
+      delete obj[prop];
+    }
+  });
+</script>

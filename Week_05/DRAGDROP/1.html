@@ -1,0 +1,31 @@
+<div id="dragable" style="width: 100px;height: 100px;background-color: pink;"></div>
+
+<script>
+  let dragable = document.getElementById("dragable");
+
+  //
+  let baseX = 0;
+  let baseY = 0;
+
+  dragable.addEventListener("mousedown", event => {
+    // 鼠标的起始点
+    let startX = event.clientX;
+    let startY = event.clientY;
+
+
+    let up = event => {
+      baseX = baseX + event.clientX - startX;
+      baseY = baseY + event.clientY - startY;
+      document.removeEventListener("mousemove", move);
+      document.removeEventListener("mouseup", up);
+    };
+    let move = event => {
+      // console.log(event)
+      dragable.style.transform = `translate(${baseX + event.clientX - startX}px, ${baseY + event.clientY - startY}px)`;
+    };
+
+    document.addEventListener("mousemove", move);
+
+    document.addEventListener("mouseup", up);
+  })
+</script>
