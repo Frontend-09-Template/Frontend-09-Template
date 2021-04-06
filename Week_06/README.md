@@ -23,6 +23,36 @@
 
 **终结符：**最终在代码中出现的字符。
 
+
+
+## 现代语言分类
+
+数据描述语言：
+JSON、HTML、XML、SQL、CSS
+
+编程语言：
+Java、C、C++、C#、JavaScript、VB、python、PHP、Swift、go、Perl、Bash、OCaml
+
+编译语言：
+Java、C、C++、C#
+
+解释语言：
+Python、JavaScript、Bash
+
+面向对象：
+Java、JavaScript、Python、C#
+
+面向过程：
+C、OCaml
+
+声明式：
+JSON、SQL、CSS、HTML、XML
+
+命令式：
+Java、C、C++、C#、Python、PHP、Perl、Bash、OCaml
+
+
+
 ## JS的数据类型
 1. Null
 2. Undefined
@@ -86,3 +116,18 @@ function UTF8_Encoding(string) {
 - 单引号
 - 双引号
 - 反引号，可以插$符和花括号这样的变量，即除了反引号其他均可
+
+
+## 对象
+
+- 任何对象都是唯一的，这与它本身的状态无关。
+- 所以，即使状态完全一致的两个对象，也并不相等。
+- 我们用状态描述对象。
+- 我们状态的改变即是行为。
+
+把对象当作数据载体，是编程的一种技巧。状态的改变属于行为。
+
+Object = identifier + state + behavior
+
+认识对象的一个重要方式是分类。
+类是一种常见的描述对象的方式。而归类和分类则是两个主要的流派。对于“归类”方法而言，多继承是非常自然的事，如C++。而采用分类思想的计算机语言，则是单继承结构，并且会用一个基类Object。
