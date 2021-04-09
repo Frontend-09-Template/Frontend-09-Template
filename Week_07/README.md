@@ -9,19 +9,19 @@
 
 ## 运算式和表达式  Statement
 
-**Grammer**
+### Grammer
 
 1. Grammer Tree vs Priority  语法树和运算符，优先级的关系
 1. Left hand side & Right hand side 运算符的左值和右值的区别
 
-**Runtime**
+### Runtime
 
 1. Type converition 类型转换
 1. Reference 引用类型
 
 四则运算，乘除的优先级比加减的优先级高，括号的优先级比乘除更高。构造语法树时，乘除会优先形成更小一级的语法结构。加减形成更高一级的语法结构。运算符的优先级会影响到语法树的构成。在JS语法中，用产生式来描述运算符的优先级的。
 
-**Expressions**
+### Expressions
 
 运算符优先级最高的是Member运算，是一个分级的名称
 - a.b 成员访问
@@ -35,9 +35,13 @@
 New运算符，不带括号的New 优先级更低
 - new Foo
 
-Call Expressions 函数调用
+Call Expressions 函数调用，优先级低于Member运算和New运算
 - foo()
-- 
+- super()
+- foo()['b']
+- foo().b
+- foo()`abc`
+
 
 **Reference**
 
