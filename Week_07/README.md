@@ -42,6 +42,49 @@ Call Expressions 函数调用，优先级低于Member运算和New运算
 - foo().b
 - foo()`abc`
 
+Left hand side 依据是能不能放到等号左边
+
+Right hand Expression 不能放到等号左边的：
+
+Update Expression
+- ++ a
+- -- a
+- a ++
+- a --
+- ++ a ++
+- -- (a --)
+
+单目运算符 Unary
+- delete a.b
+- void foo()
+- typeof a
+- + a (a 如何是字符串的话，会发生类型转化，表达式是类型转换的大户)
+- - a
+- ~ a 位运算，把一个整数按位取反，如果不是整数，则强制转为整数
+- ! a
+- await a
+
+Exponental JS 唯一的右结合运算符
+- ** 表示乘方
+- 3**2**3
+- 3**（2**3）
+
+Multiplicative: * / % 乘除运算，会发生类型转换
+
+Additive: + - 加减运算
+
+Shift: << >> >>>   位运算（移位运算）
+
+Relationship: < > <= >= instanceof in
+
+Equality: == != === !=== (建议不用双等号)
+
+Bitwise: & ^ |
+
+Logical: && || 逻辑运算，短路原则
+
+Conditional: ?:  唯一的三目运算符，也是有短路逻辑
+
 
 **Reference**
 
