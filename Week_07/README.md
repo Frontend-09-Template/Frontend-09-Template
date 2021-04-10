@@ -96,3 +96,30 @@ Conditional: ?:  唯一的三目运算符，也是有短路逻辑
 - delete
 - assign
 
+## 类型转化 Type Convertion
+
+- a + b
+- "false" == false
+- a[o] = 1
+
+主要有装箱转化和拆箱转化
+
+Unboxing
+- ToPremitive
+- toString vs valueOf
+- Symbol.toPrimitive
+
+```
+var o = {
+  toString() { return "2"},
+  valueOf() { return 1},
+  [Symbol.toPrimitive]() {return 3},
+}
+
+var x = {}
+x[o] = 1
+console.log("x" + o)
+```
+
+
+
