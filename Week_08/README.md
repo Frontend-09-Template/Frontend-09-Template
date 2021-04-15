@@ -181,10 +181,18 @@ TCP层，传输数据的概念是流，是一种没有明显分割单位的东�
 - IP地址 IP是根据地址找包应该从哪里到哪里
 - libnet/libpcap  大型的路由节点，调用到C++的两个库，前者负责构造IP包并发送，后者负责从网卡抓取所有的流经你的网卡的IP包
 
-HTTP
+### HTTP
 - request
 - response
 
 TCP全双工通道，你可以给我发，我也可以给你发，不存在优先关系。HTTP必须得先由客户端发起一个request，然后服务端返回来一个response。
+HTTP 协议是一个文本型的协议，和二进制的协议是相对的，协议里面的内容都是字符串。
+
+#### request 部分
+- POST /HTTP/1.1                                                                 Request line
+- Host: 127.0.0.1
+- Content-Type: application/x-www-form-urlencoded                                Headers
+
+- field1=aaa&code=x%3D1                                                          Body
 
 
