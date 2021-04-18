@@ -195,4 +195,45 @@ HTTP 协议是一个文本型的协议，和二进制的协议是相对的，协
 
 - field1=aaa&code=x%3D1                                                          Body
 
+## 2.实现 HTTP 请求
 
+### 第一步：构造 Http 请求
+
+- 谁将一个 HTTP 请求的类
+- Content-Type 是一个必要字段，设置默认值
+- body 是 KV 格式
+- 不同的 Content-Type 影响 body 的格式
+
+### 第二步： send 函数的总结
+
+- 在 request 的构造函数中收集必要的信息
+- 设计一个 send 函数，将请求发送到服务器
+- send 函数应该是异步的，返回 Promise
+
+response格式
+```
+HTTP/1.1 200 /* status line*/
+Content-Type:text/html /* headers */
+Date:Mon,23 Dec 2019 06:46:19 GMT /* headers */
+Connection: keep-alive /* headers */
+Transfer-Encoding: chunked /* headers */
+
+26 /* chunked body, 16 进制数字 */
+<html><body>Hello world</body></html> /* chunked body */
+0 /* chunked body, 16 进制数字 */
+```
+### 第三步：发送请求
+
+- 支持已有的 connection，否则新建 connection
+- 收到数据传给 parser 解析
+- 根据 parser 的状态去设定 Promise 的状态
+
+### 第四步： ResponseParser 总结
+
+- Response 必须分段构造，所以用了一个 ResponseParser 来装配
+- ResponseParser 分段处理 ResponseText，使用状态机来分析文本结构
+
+### 第五步：BodyParser 总结
+
+- Response 的 body 可能根据 Content-Type 有不同的结构，因此会采用不同的子 Parser 来解决问题
+- 文中以 TrunkedBodyParser 为例，我们同样用状态机来处理 body 的格式
