@@ -1,0 +1,23 @@
+<script>
+  // 字符串转数字
+  function StringToNumber(str, radix) {
+      if (Object.prototype.toString.call(str) !== "[object String]") {
+          console.log('str is not a string')
+          return
+      }
+      let hasMinus = str.startsWith('-');
+      if (hasMinus) {
+          str = str.slice(1);
+      }
+      let num = parseInt(str, radix)
+      return hasMinus ? -num : num;
+  }
+  // 数字转字符串
+  function NumberToString(num, radix) {
+      if (Object.prototype.toString.call(num) !== "[object Number]") {
+          console.log('num is not a number')
+          return
+      }
+      return num.toString(radix);
+  }
+</script>
