@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>flex</title>
+    <style>
+        .box{
+            display:flex;
+            /* flex-wrap: wrap-reverse; */
+            height:300px;
+            /* flex-wrap:wrap; */
+            justify-content: space-around;
+            /* width:300px; */
+            width: 600px;
+            flex-direction:row;
+        }
+        .box div{
+            width:100px;
+            height:100px;
+        }
+        .box .child1{
+            background:skyblue;
+            /* flex:1; */
+        }
+        .box .child2{
+            background:pink;
+            /* flex:1; */
+        }
+        .box .child3{
+            background:lightgreen;
+        }
+        .box .child4{
+            background:lightcoral;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="child1"></div>
+        <div class="child2"></div>
+        <div class="child3"></div>
+        <div class="child4"></div>
+    </div>
+</body>
+</html>
