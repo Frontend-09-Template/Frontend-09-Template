@@ -37,20 +37,8 @@
     - https://www.w3.org/TR/selectors-3/  实现的比较好的
     - https://www.w3.org/TR/selectors-4/  在标准制定的途中
     - seletor-group
-    - selector
-      - >
-      - <sp>
-      - +
-      - -
-    - simple_selector
-      - type
-      - *
-      - .
-      - #
-      - []
-      - :
-      - ::
-      - :not()
+    - selector： >、<sp> 、+、 -
+    - simple_selector： type、*、.、#、[]、:、::、:not()
   - 声明
     - key
       - properties
