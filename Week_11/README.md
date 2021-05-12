@@ -17,11 +17,52 @@
   - @media media(CSS3 media query)
   - @page page(主要用于打印的一些信息)
 
+
+# CSS @规则
 知识结构图：
-- at-rules
-  - @charset
-  - @import
-  - @media
-  - @page
+
+- At-rules
+  - @charset: https://www.w3.org/TR/css-syntax-3/
+  - @import: https://www.w3.org/TR/css-cascade-4/
+  - @media: https://www.w3.org/TR/css3-conditional/
+  - @page: https://www.w3.org/TR/css-page-3/
+  - @counter-style: https://www.w3.org/TR/css-counter-styles-3  定义样式规则
+  - @keyframes: https://www.w3.org/TR/css-animations-1/   定义动画
+  - @fontface: https://www.w3.org/TR/css-fonts-3/
+  - @supports: https://www.w3.org/TR/css3-conditional/   检查CSS的功能是否存在，不建议使用，建议用工程工具
+  - @namespace: https://www.w3.org/TR/css-namespaces-3/  在极端的情况下，作为补充去用
 
 - rule
+  - 选择器 Selector
+    - https://www.w3.org/TR/selectors-3/  实现的比较好的
+    - https://www.w3.org/TR/selectors-4/  在标准制定的途中
+    - seletor-group
+    - selector
+      - >
+      - <sp>
+      - +
+      - -
+    - simple_selector
+      - type
+      - *
+      - .
+      - #
+      - []
+      - :
+      - ::
+      - :not()
+  - 声明
+    - key
+      - properties
+      - variables: https://www.w3.org/TR/css-variables/  双减号开头（--）可以声明变量
+    - value: https://www.w3.org/TR/css-values-4/ 整形、百分比、浮点型，长度单位，弧度，频率，函数（min,max,clamp,calc,attr)
+
+``` css
+  div {
+    background-color: blue;
+  }
+  :root { --not-a-color: 20px}
+```
+
+
+
