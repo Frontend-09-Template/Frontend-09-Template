@@ -9,7 +9,7 @@
 - 单竖线(|): 或
 - 星号(*): 0个或多个
 
-总结结构：
+总体结构：
 - @charset stylesheet 允许一个charset的结构
 - @import 允许若干个import
 - 长列表：
@@ -51,6 +51,17 @@
   }
   :root { --not-a-color: 20px}
 ```
+
+
+# 选择器 | 伪类
+
+- 链接/行为
+  - :any-link 任一超链接
+  - :link :visited  超链接  已经访问过的超链接  一旦使用了这两个就没办法去更改文字颜色之外的属性了，主要是从安全方面考虑的
+  - :hover
+  - :active
+  - :focus
+  - :target
 
 
 
