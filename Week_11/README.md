@@ -61,7 +61,15 @@
   - :hover
   - :active
   - :focus
-  - :target
+  - :target  作为锚点的 a 标签使用的
 
+- 树结构
+  - :empty
+  - :nth-child()
+  - :nth-last-child()
+  - :first-child :last-child :only-child
+
+- 逻辑型
+  - :not 
 
 
