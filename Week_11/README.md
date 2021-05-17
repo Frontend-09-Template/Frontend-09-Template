@@ -107,6 +107,29 @@ console.log(iframe.contentDocument.querySelectorAll('.propdef'));
 specificity:[0,     2,      1,      1]  
                     id    class     type
 ```
+S = 0 * N ** 3 + 2 * N ** 2 + 1 * N ** 1 + 1
+
+取 N = 1000000
+S = 2000001000001
+
+请写出下面选择器的优先级： 
+- div#a.b .c[id=x] 0 1 3 1 
+- #a:not(#b) 0 2 0 0 
+- *.a 0 0 1 0 
+- div.a 0 0 1 1
+
+```
+function calculate(arr) {
+  let N = 256 ** 2;
+  return arr[0] * N ** 3 + arr[1] * N ** 2 + arr[2] * N + arr[3];
+}
+
+calculate([0,1,3,1]);  // 4295163905
+calculate([0,2,0,0]);  // 8589934592
+calculate([0,0,1,0]);  // 65536
+calculate([0,0,1,1]);  // 65537
+
+```
 
 # 选择器 | 伪类
 
@@ -155,7 +178,8 @@ specificity:[0,     2,      1,      1]
 
 ```html
 <div>
-<::fitst-letter>c</::first-letter>content content content content
+<::fitst-letter>c</::first-letter>
+content content content content
 content content content content
 content content content content
 content content content content
