@@ -6,20 +6,26 @@ let currentAttribute = null;
 let currentTextNode = null;
 let stack = [{type: "document", children: []}];
 let rules = [];
-function specifity(selector) {
+
+
+// 统计一条css规则中，id class tag 3种选择器出现的次数
+// 可以再这里解析复合选择器
+function specifity(selector){
+  //inline id class tag
   var p = [0, 0, 0, 0];
-  let selectorParts = selector.split(" ");
-  for (let part of selectorParts) {
-    if (part.charAt(0) == "#") {
-      p[1] += 1;
-    } else if (part.charAt(0) == ".") {
-      p[2] += 1; 
-    } else {
-      p[3] += 1;
-    }
-  }
+  var selectorParts = selector.split(' ');
+  for(var part of selectorParts){
+      if(part.charAt(0) === '#'){//id选择器数量加1
+          p[1] += 1;
+      }else if(part.charAt(0) === '.'){//class选择器数量加1
+          p[2] += 1;
+      }else{ //tag选择器数量加1
+          p[3] += 1;
+      }
+  }  
   return p;
 }
+
 function compare(sp1, sp2) {
   if (sp1[0] - sp2[0]) {
     return sp1[0] - sp2[0];
@@ -57,6 +63,7 @@ function match(element, selector) {
   }
   return false;
 }
+
 function computeCSS(element) {
   var elements = stack.slice().reverse();
   if (!element.computedStyle) {

@@ -1,5 +1,7 @@
 const net = require('net');
 const parser = require('./parser');
+const render = require('./render');
+const images = require('images');
 
 class TrunkedBodyParser {
   constructor() {
@@ -69,6 +71,19 @@ class ResponseParser {
     this.isFinished = false;
     this.response = {};
   }
+  get isFinished(){
+    return this.bodyParser && this.bodyParser.isFinished;
+  }
+
+  get response(){
+    this.statusLine.match(/HTTP\/1.1 ([0-9]+) ([\s\S]+)/);
+    return {
+        statusCode: RegExp.$1,//正则对象上也存在匹配的结果
+        statusText: RegExp.$2,
+        headers: this.headers,
+        body: this.bodyParser.content.join('')
+    }
+  }
   receive(string) {
     for (let i = 0; i < string.length; i++) {
       this.receiveChar(string.charAt(i));
@@ -79,19 +94,25 @@ class ResponseParser {
   }
   receiveChar(char) {
     if (this.current === this.WAITING_STATUS_LINE) {
+      // 如果遇到回车符，表示状态行将要结束
       if (char === '\r') {
         this.current = this.WAITING_STATUS_LINE_END;
       } else {
+        // 拼接保存状态行的字符
         this.statusLine += char;
       }
+    // 状态行结束标识查找
     } else if (this.current === this.WAITING_STATUS_LINE_END) {
+      // 如果状态行结束了，我们下一个要查找的时header的name
       if (char === '\n') {
         this.current = this.WAITING_HEADER_NAME;
       }
+    // header name的查找
     } else if (this.current === this.WAITING_HEADER_NAME) {
       if (char === ':') {
         this.current = this.WAITING_HEADER_SPACE;
       } else if (char === '\r') {
+        // 回车符说明所有的header name已查找完了
         this.current = this.WAITING_HEADER_BLOCK_END;
         if (this.headers['Transfer-Encoding'] === 'chunked') {
           this.bodyParser = new TrunkedBodyParser();
@@ -147,24 +168,30 @@ class Request {
     } else if (this.headers["Content-Type"] === "application/x-www-form-urlencoded") {
       this.bodyText = Object.keys(this.body).map(key => `${key}=${encodeURIComponent(this.body[key])}`).join('&');
     }
+    // 请求体的长度
     this.headers["Content-Length"] = this.bodyText.length;
   }
   send(connection) {
     return new Promise((resolve,reject) => {
       const parser = new ResponseParser();
+      // 如果传入连接，直接写入数据即可
       if (connection) {
         connection.write(this.toString());
       } else {
+        // 否则我们创建一个connection
         connection = net.createConnection({
           host: this.host,
           port: this.port
         }, () => {
+          // 创建完成连接之后写入数据
           connection.write(this.toString())
         })
       }
+      // 监听数据的接收,传递给ResponseParser解析
       connection.on('data', (data) => {
         parser.receive(data.toString());
         if (parser.isFinished) {
+          // 如果解析完成
           resolve(parser.response);
           connection.end();
         }
@@ -175,6 +202,7 @@ class Request {
       });
     });
   }
+  // 将请求的数据组装成HTTP请求报文
   toString() {
     return `${this.method} ${this.path} HTTP/1.1\r
 ${Object.keys(this.headers).map(key => `${key}: ${this.headers[key]}`).join('\r\n')}\r
@@ -198,5 +226,8 @@ void async function () {
   });
   const response = await request.send();
   const dom = parser.parseHTML(response.body);
+  let viewport = images(800, 600);
+
+  render(viewport,dom);
   console.log(JSON.stringify(dom, null, "   "));
 }();
