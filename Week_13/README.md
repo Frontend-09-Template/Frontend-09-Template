@@ -87,5 +87,38 @@ let element = document.getElementById('a');
 
   reverseChildren(element);
 ```
+## 7. CSSOM
 
++ document.styleSheets  CSS的一切API都要通过这个属性访问
+  - Rules
+    + document.styleSheets[0].cssRules
+    + document.styleSheets[0].insertRule("p { color: pink; }", 0)
+    + document.styleSheets[0].removeRule(0)
+  - Rule
+    + CSSStyleRule
+      - selectorText String
+      - style K-V 结构
+    + CSSCharsetRule
+    + CSSImportRule
+    + CSSMediaRule
+    + CSSFontFaceRule
+    + CSSPageRule
+    + CSSNamespaceRule
+    + CSSKeyframesRule
+    + CSSKeyframeRule
+    + CSSSupportsRule
+    + ......
++ 案例
 
+```html
+<style title="Hello">
+  a::before {
+    color: red;
+    content: "Hello"
+  }
+</style>
+<link rel="stylesheet" title="x" href="data:text/css,p%7Bcolor:blue%7D">
+<a>word</a>
+```
+
+练习 详见 stylesheet.html
