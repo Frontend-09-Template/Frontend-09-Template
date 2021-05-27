@@ -8,5 +8,9 @@
 <a>word</a>
 
 <script>
-  document.styleSheets
+  document.styleSheets[0].cssRules[0].style.color = 'lightgreen';
+
+  getComputedStyle(document.querySelector('a'))
+
+  getComputedStyle(document.querySelector('a'), "::before").color
 </script>

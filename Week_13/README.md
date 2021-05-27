@@ -87,7 +87,7 @@ let element = document.getElementById('a');
 
   reverseChildren(element);
 ```
-## 7. CSSOM
+## 7. CSSOM 基础API
 
 + document.styleSheets  CSS的一切API都要通过这个属性访问
   - Rules
@@ -122,3 +122,19 @@ let element = document.getElementById('a');
 ```
 
 练习 详见 stylesheet.html
+
+**getComputedStyle**
+获取页面元素最终渲染的样式
++ window.getComputedStyle(elt, pseudoElt);
+  - elt 想要获取的元素
+  - pseudoElt 可选，伪元素
+
+```js
+  document.styleSheets[0].cssRules[0].style.color = 'lightgreen';
+
+  getComputedStyle(document.querySelector('a'))
+
+  getComputedStyle(document.querySelector('a'), "::before").color
+```
+
+## 8. CSSOM View
