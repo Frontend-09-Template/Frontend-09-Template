@@ -129,6 +129,10 @@ let element = document.getElementById('a');
   - elt 想要获取的元素
   - pseudoElt 可选，伪元素
 
++ 使用场景
+  - 比如元素需要做拖拽，获取元素的transform
+  - CSS动画的中间态，想要暂停动画，没有办法DOM API，style和cssRule判断播到哪了，需要使用getComputedStyle去获取实时的状态
+
 ```js
   document.styleSheets[0].cssRules[0].style.color = 'lightgreen';
 
@@ -138,3 +142,73 @@ let element = document.getElementById('a');
 ```
 
 ## 8. CSSOM View
+
++ 获取layout和render后的一些信息
++ CSSOM View 主要和浏览器最后画上去的视图相关
+
+**window**
++ window.innerWidth，window.innerHeight 浏览器实际渲染html内容的区域的宽高
++ window.outerrWidth，window.outerHeight 浏览器窗口总共占的宽高，包括工具栏
++ window.devicePixelRatio
+  - 屏幕上的物理像素和代码里面的逻辑像素px之间的比值
+  - 正常的设备，比值是1:1，retina屏上是1:2，在有些安卓机上还有可能是1:3
++ window.screen 屏幕的信息
++ window.screen.width 屏幕宽
++ window.screen.height 屏幕高
++ window.screen.availWidth 屏幕可用宽
++ window.screen.availHeight 屏幕可用高（去除物理按键占用的部分，取决于硬件配置）
+
+**Window API**
++ window.open("about:blank", "_blank", "width=100,height=100,left=100,right=100")
+  - 原始的标准里面的定义只有两个参数，但是CSSOM的Window API给它加了第三个参数
+  - 我们可以指定，我们打开的窗口的宽高和在屏幕上所处的位置
++ moveTo(x,y); 移动我们自己创建的窗口的位置，直接修改为目标值
++ moveBy(x, y); 移动我们自己创建的窗口的位置，在原来的基础上增加值
++ resizeTo(x, y); 修改我们自己创建的窗口的位尺寸，直接修改为目标值
++ resizeBy(x, y); 修改我们自己创建的窗口的位尺寸，在原来的基础上增加值
+
+**scroll API**
+
+scroll元素
+
++ scrollTop 当前元素当前滚动到的位置（垂直方向）
++ scrollLeft 当前元素滚动到的位置（水平方向）
++ scrollwidth 可滚动类型的最大宽度
++ scrollHeight 可滚动类型的最大高度
++ scroll(x, y) 滚动到一个坐标位置
++ scrollBy(x, y) 在当前基础上滚动一段距离
++ scrollIntoView() 滚动到元素的可见区域
+
+window元素
+
++ scrollX 窗口水平方向滚动到的位置，对应元素的scrollLeft
++ scrollY 窗口垂直方向滚动到的位置，对应元素的scrollTop
++ scroll(x,y) 和元素scroll的一致
++ scrollBy(x,y) 和元素scrollBy的一致
+
+layout API 获取浏览器layout之后，元素的位置大小信息
+
++ el.getClientRects() 获取元素内部生成的所有盒的位置大小信息
++ el.getBoundingClientRect() 获取元素本身占用的位置和大小信息
+
+```html
+<style>
+    .x::before{
+        content:"额外 额外 额外 额外 额外";
+        background-color:pink;
+    }
+</style>
+
+<div style="width:100px;height:400px;overflow:auto;">
+    文字<span class="x" style="background-color:lightblue;">文字 文字 文字 文字 文字 文字 文字</span>
+</div>
+<script>
+    var x = document.getElementsByClassName('x')[0];
+    //获取x元素layout时内部生成的所有盒的信息（会有多个盒产生，是一个数组），并且x的伪元素也会参与到生成盒的过程中
+    console.log(x.getClientRects());
+    //获取x元素layout时包含所有内部生成盒的容器的信息，这个容器的大小等同于元素的实际占用的空间大小
+    console.log(x.getBoundingClientRect());
+</script>
+```
+
+详见 rect.html

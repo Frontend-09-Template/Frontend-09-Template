@@ -1,0 +1,17 @@
+<style>
+  .x::before{
+      content:"额外 额外 额外 额外 额外";
+      background-color:pink;
+  }
+</style>
+
+<div style="width:100px;height:400px;overflow:auto;">
+  文字<span class="x" style="background-color:lightblue;">文字 文字 文字 文字 文字 文字 文字</span>
+</div>
+<script>
+  var x = document.getElementsByClassName('x')[0];
+  //获取x元素layout时内部生成的所有盒的信息（会有多个盒产生，是一个数组），并且x的伪元素也会参与到生成盒的过程中
+  console.log(x.getClientRects());
+  //获取x元素layout时包含所有内部生成盒的容器的信息，这个容器的大小等同于元素的实际占用的空间大小
+  console.log(x.getBoundingClientRect());
+</script>
