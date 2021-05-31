@@ -41,3 +41,33 @@ End User Input  --->    State    <---   attribute       Component User's Markup 
 **Attribute vs Property**
 + Attribute 强调描述性
 + Property 强调从属关系
+
+```
+Attribute:
+
+<my-Component attribute="v" />
+myComponent.getAttribute("a")
+myComponent.setAttribute("a", "value")
+
+Property:
+
+myComponent.a = "value"
+```
+
+早期JS不允许关键字作为属性名，现在已经没有这个问题了，但是html还是不支持 class 这个名字
+```html
+<div class="cls1 cls2" style="color: blue">
+  <a href="//m.taobao.com">link</a>
+</div>
+<script>
+var div = document.getElementsByTagName("div")[0];
+console.log(div.className)   // cls1 cls2
+console.log(div.style)       // 对象，字符串语义化之后的对象  CSSStyleDeclaration {0: "color", alignContent: "", alignItems: "", alignSelf: "", alignmentBaseline: "", all: "", …}
+
+var a = document.getElementsByTagName("a")[0];
+console.log(a.href)      // http://m.taobao.com/
+console.log(a.getAttribute("href"))      // //m.taobao.com
+</script>>
+```
+
+详见 test-attribute.html

@@ -1,0 +1,12 @@
+<div class="cls1 cls2" style="color: blue">
+  <a href="//m.taobao.com">link</a>
+</div>
+<script>
+var div = document.getElementsByTagName("div")[0];
+console.log(div.className)   // cls1 cls2
+console.log(div.style)       // 对象，字符串语义化之后的对象  CSSStyleDeclaration {0: "color", alignContent: "", alignItems: "", alignSelf: "", alignmentBaseline: "", all: "", …}
+
+var a = document.getElementsByTagName("a")[0];
+console.log(a.href)      // http://m.taobao.com/
+console.log(a.getAttribute("href"))      // //m.taobao.com
+</script>
