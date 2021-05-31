@@ -1,10 +1,127 @@
 学习笔记
+# 重学HTML
+ ## 1. XML与SGML
+**DTD与XML namesapce**
++ http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd
++ http://www.w3.org/1999/xhtml
 
+**从DTD了解HTML**
++ DTD是SGML规定的定义它的子集的文档的格式
++ HTML最早设计出来是SGML的一个子集，所以它有这个DTD
+
+重点：
+lat
++ &nbsp  空格，不会把单词分开（如果想要多个空格，推荐使用white-space属性）
+symbol
++ &Omega、&alpha、&lambda 等特殊符号
+special
++ quot  "
++ amp  &
++ lt  <
++ gt   >
+
+namespace
++ HTML
++ XHTML
++ MathML
++ SVG
+
+## 2. 标签语义
+
+`<header>` `<aside>` `<article>` `<section>` `<figure>` 
+
+## 3. HTML语法
+
+合法元素
++ Element:`<tagName>...</tagName>`
++ Text:text
++ Comment:`<!--comments-->`
++ DocumentType:`<!Doctype html>`
++ ProcessingInstruction:`<?a 1?>` 预处理
++ CDATA:`<![CDATA[]]>` 一种语法，产生的也是文本节点，不需要考虑转义问题
+
+字符引用
++ `&#161;` 
++ `&amp;`
++ `&lt;`
++ `&quot;`
 
 
 # 浏览器API
 
+## 4. DOM API
+
+Node
++ Element：元素型节点，跟标签对应
+    - HTMLElement
+        - HTMLAnchorElement
+        - HTMLAppletElement
+        - HTMLAreaElement
+        - HTMLAudioElement
+        - HTMLBaseElement
+        - HTMLBodyElement
+        ...
+    - SVGElement
+        - SVGAElement
+        - SVGAltGlyphElement
+        ...
++ Document:文档根节点
++ CharacterData字符数据
+    - Text:文本节点 
+        - CDATASection:CDATA节点
+    - Comment：注释
+    - ProcessingInstruction:处理信息
++  DocumentFragment:文档片段
++ DocumentType:文档类型
+
+导航类操作
++ Node
+    - parentNode
+    - childNodes
+    - firstChild
+    - lastChild
+    - nextSibling
+    - previousSibling
++ element
+    - parentElement
+    - children
+    - firstElementChild
+    - lastElementChild
+    - nextElementSibling
+    - previousElementSibling
+
+修改操作(都是对子元素的操作)
++ appendChild 添加一个节点到所有子元素的后面
++ insertBefore 插入一个节点到某个子元素的前面
++ removeChild 删除一个子元素
++ replaceChild 替换一个子元素
+
+高级操作
++ compareDocumentPosition 是一个用于比较两个节点中关系的函数
++ contains 检查一个节点是否包含另一个节点的函数
++ isEqualNode 检查两个节点是否完全相同
++ isSameNode 检查两个节点是否是同一个节点，实际在JavaScript中可以使用“===”
++ cloneNode 复制一个节点，如果传入参数true，会连同子元素做深拷贝
+
 ## 5. 事件 API
+**addEventListener(type, listener, options)**
+
++ type 定义要监听的事件类型
++ listener 必须是一个JS函数或者是实现了EventListener接口的对象
++ options
+  - capture boolean类型，表示是否在捕获阶段触发listener
+  - once boolean类型，设置为true，listener会被触发调用一次之后移除
+  - passive boolean类型，设置为true时，在listener内部不可调用preventDefault（可以用于移动端滑动事件优化）
+
+**Event:冒泡与捕获**
+
++ 冒泡和捕获是浏览器处理事件的一种机制，在任何一个事件的触发过程中都会发生，而和我们是否添加监听没有关系
++ 任何一个事件都是先捕获后冒泡
+  - 捕获阶段：我们手中的鼠标并不能提供我们到底点在哪个元素上的信息，需要通过浏览器的计算才能得到，也就是从外到内，一层一层的去计算，到底这个事件发生在哪个元素上，这就是捕获的过程（从外到内）
+  - 冒泡阶段：我们已经算出来，触发事件的是哪个元素，层层的向外去触发，让外层元素响应这个事件的过程，更符合人类的直觉（从内向外）。
++ 默认添加的是冒泡阶段执行的listener，里层的元素的listener会先执行，然后才会一层一层执行外层的listener
++ 如果外层元素添加了捕获阶段执行的listener，会先从外层向内依次执行捕获阶段执行的listener（不包括触发事件的元素）
++ 触发事件的元素的listener触发的顺序和添加顺序一致（不区分捕获还是冒泡，都是按添加顺序来执行的）备注：最新版Chrome规则修改了，触发事件的元素也会先触发捕获模式的listener，再触发冒泡模式的listener
 
 ## 6. Range API
 
@@ -129,6 +246,10 @@ let element = document.getElementById('a');
   - elt 想要获取的元素
   - pseudoElt 可选，伪元素
 
++ 使用场景
+  - 比如元素需要做拖拽，获取元素的transform
+  - CSS动画的中间态，想要暂停动画，没有办法DOM API，style和cssRule判断播到哪了，需要使用getComputedStyle去获取实时的状态
+
 ```js
   document.styleSheets[0].cssRules[0].style.color = 'lightgreen';
 
@@ -139,50 +260,78 @@ let element = document.getElementById('a');
 
 ## 8. CSSOM View
 
++ 获取layout和render后的一些信息
++ CSSOM View 主要和浏览器最后画上去的视图相关
+
+**window**
++ window.innerWidth，window.innerHeight 浏览器实际渲染html内容的区域的宽高
++ window.outerrWidth，window.outerHeight 浏览器窗口总共占的宽高，包括工具栏
++ window.devicePixelRatio
+  - 屏幕上的物理像素和代码里面的逻辑像素px之间的比值
+  - 正常的设备，比值是1:1，retina屏上是1:2，在有些安卓机上还有可能是1:3
++ window.screen 屏幕的信息
++ window.screen.width 屏幕宽
++ window.screen.height 屏幕高
++ window.screen.availWidth 屏幕可用宽
++ window.screen.availHeight 屏幕可用高（去除物理按键占用的部分，取决于硬件配置）
+
 **Window API**
-+ window.innerHeight, window.innerWidth  代表了我们实际上使用的viewport, 浏览器内容实际上渲染区域
-+ window.outerWidth, window.outerHeight  浏览器窗口总共占的尺寸
-+ window.devicePixelRatio                DPR 屏幕上的物理像素与代码的逻辑像素的比
-+ window.screen                          
-  - window.screen.width                  屏幕的宽度
-  - window.screen.height                 屏幕的高度
-  - window.screen.availWidth             设备的物理可使用的宽度
-  - window.screen.availHeight            设备的物理可使用的高度
++ window.open("about:blank", "_blank", "width=100,height=100,left=100,right=100")
+  - 原始的标准里面的定义只有两个参数，但是CSSOM的Window API给它加了第三个参数
+  - 我们可以指定，我们打开的窗口的宽高和在屏幕上所处的位置
++ moveTo(x,y); 移动我们自己创建的窗口的位置，直接修改为目标值
++ moveBy(x, y); 移动我们自己创建的窗口的位置，在原来的基础上增加值
++ resizeTo(x, y); 修改我们自己创建的窗口的位尺寸，直接修改为目标值
++ resizeBy(x, y); 修改我们自己创建的窗口的位尺寸，在原来的基础上增加值
 
-+ `window.open("about:blank", "_blank", "width=100,height=100,left=100,right=100")`
-+ moveTo(x, y)
-+ moveBy(x, y)
-+ resizeTo(x, y)
-+ resizeBy(x, y)
+**scroll API**
 
-详见 window.html
+scroll元素
 
-**scroll**
-+ scrollTop
-+ scrollLeft
-+ scrollWidth
-+ scrollHeight
-+ scroll(x, y)
-+ scrollBy(x, y)  在当前的基础上滚动一个差值
-+ scrollIntoView()  强制滚动到屏幕的可见区域
++ scrollTop 当前元素当前滚动到的位置（垂直方向）
++ scrollLeft 当前元素滚动到的位置（水平方向）
++ scrollwidth 可滚动类型的最大宽度
++ scrollHeight 可滚动类型的最大高度
++ scroll(x, y) 滚动到一个坐标位置
++ scrollBy(x, y) 在当前基础上滚动一段距离
++ scrollIntoView() 滚动到元素的可见区域
 
-+ window  窗口
-  - scrollX
-  - scrollY
-  - scroll(x, y)
-  - scrollBy(x, y)
+window元素
 
++ scrollX 窗口水平方向滚动到的位置，对应元素的scrollLeft
++ scrollY 窗口垂直方向滚动到的位置，对应元素的scrollTop
++ scroll(x,y) 和元素scroll的一致
++ scrollBy(x,y) 和元素scrollBy的一致
 
-**layout**
-获取浏览器layout之后结构的利器，能够真实的取到元素的位置，而且这两个API它的兼容性非常好，比如实现拖拽效果都会使用这两个API.
-+ getClientRects()
-+ getBoundingClientRect()   所有元素生成的盒包含的区域生成出来
+layout API 获取浏览器layout之后，元素的位置大小信息
+
++ el.getClientRects() 获取元素内部生成的所有盒的位置大小信息
++ el.getBoundingClientRect() 获取元素本身占用的位置和大小信息
+
+```html
+<style>
+    .x::before{
+        content:"额外 额外 额外 额外 额外";
+        background-color:pink;
+    }
+</style>
+
+<div style="width:100px;height:400px;overflow:auto;">
+    文字<span class="x" style="background-color:lightblue;">文字 文字 文字 文字 文字 文字 文字</span>
+</div>
+<script>
+    var x = document.getElementsByClassName('x')[0];
+    //获取x元素layout时内部生成的所有盒的信息（会有多个盒产生，是一个数组），并且x的伪元素也会参与到生成盒的过程中
+    console.log(x.getClientRects());
+    //获取x元素layout时包含所有内部生成盒的容器的信息，这个容器的大小等同于元素的实际占用的空间大小
+    console.log(x.getBoundingClientRect());
+</script>
+```
 
 详见 rect.html
 
-
-## 9. 浏览器API-其他API
-API 主要来自于4个标准化组织：
+## 9. 其他API
+标准化组织：
 + khronos
   - WebGL
 + ECMA
@@ -192,3 +341,5 @@ API 主要来自于4个标准化组织：
 + W3C
   - webaudio
   - CG/WG
+
+作业详见 apis.html
