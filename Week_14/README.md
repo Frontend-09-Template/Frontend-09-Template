@@ -104,3 +104,9 @@ Template型
 
 
 ## 从无到有搭建一个组件系统
+
+markup建立的风格
++ react JSX
++ vue 标记语言的parser
+
+### 2. 为组件添加JSX语法
