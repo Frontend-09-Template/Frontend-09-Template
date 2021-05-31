@@ -59,6 +59,10 @@ myComponent.a = "value"
 <div class="cls1 cls2" style="color: blue">
   <a href="//m.taobao.com">link</a>
 </div>
+
+<div>
+  <input value="cute" />
+</div>
 <script>
 var div = document.getElementsByTagName("div")[0];
 console.log(div.className)   // cls1 cls2
@@ -67,7 +71,36 @@ console.log(div.style)       // 对象，字符串语义化之后的对象  CSSS
 var a = document.getElementsByTagName("a")[0];
 console.log(a.href)      // http://m.taobao.com/
 console.log(a.getAttribute("href"))      // //m.taobao.com
-</script>>
+
+var input = document.getElementsByTagName("input")[0];   // 若 property 没有设置则结果是 attribute
+console.log(input.value)          // cute
+console.log(input.getAttribute("value"))   // cute
+input.value = 'hello'   // 若value属性已设置则 attribute 不变，property 变化，元素实际上的效果是 property 优先
+console.log(input.value)  // hello
+console.log(input.getAttribute("value"))   // cute
+</script>
 ```
 
 详见 test-attribute.html
+
+**如何设计组件状态**
+```markdown
+Markup set(标签)            JS set           JS change          User Input change(用户输入)
+
+
+```
+
+**生命周期LifeCycle**
+create
+mount
+unmount
+render
+update   userInput Change
+destoryed
+
+**Children**
+Content型
+Template型
+
+
+## 从无到有搭建一个组件系统
