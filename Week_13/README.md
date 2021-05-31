@@ -138,3 +138,57 @@ let element = document.getElementById('a');
 ```
 
 ## 8. CSSOM View
+
+**Window API**
++ window.innerHeight, window.innerWidth  代表了我们实际上使用的viewport, 浏览器内容实际上渲染区域
++ window.outerWidth, window.outerHeight  浏览器窗口总共占的尺寸
++ window.devicePixelRatio                DPR 屏幕上的物理像素与代码的逻辑像素的比
++ window.screen                          
+  - window.screen.width                  屏幕的宽度
+  - window.screen.height                 屏幕的高度
+  - window.screen.availWidth             设备的物理可使用的宽度
+  - window.screen.availHeight            设备的物理可使用的高度
+
++ `window.open("about:blank", "_blank", "width=100,height=100,left=100,right=100")`
++ moveTo(x, y)
++ moveBy(x, y)
++ resizeTo(x, y)
++ resizeBy(x, y)
+
+详见 window.html
+
+**scroll**
++ scrollTop
++ scrollLeft
++ scrollWidth
++ scrollHeight
++ scroll(x, y)
++ scrollBy(x, y)  在当前的基础上滚动一个差值
++ scrollIntoView()  强制滚动到屏幕的可见区域
+
++ window  窗口
+  - scrollX
+  - scrollY
+  - scroll(x, y)
+  - scrollBy(x, y)
+
+
+**layout**
+获取浏览器layout之后结构的利器，能够真实的取到元素的位置，而且这两个API它的兼容性非常好，比如实现拖拽效果都会使用这两个API.
++ getClientRects()
++ getBoundingClientRect()   所有元素生成的盒包含的区域生成出来
+
+详见 rect.html
+
+
+## 9. 浏览器API-其他API
+API 主要来自于4个标准化组织：
++ khronos
+  - WebGL
++ ECMA
+  - ECMAScript
++ WHATWG
+  - HTML
++ W3C
+  - webaudio
+  - CG/WG
