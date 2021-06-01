@@ -120,7 +120,7 @@ markup建立的风格
     entry: './main.js'
    };
    ```
-   
+
 + 创建main.js
   ```js
   const arr = [1, 2, 3];
@@ -136,3 +136,53 @@ markup建立的风格
   ```
 
 + 安装bable `npm install --save-dev @babel/core @babel/preset-env` 
++ 配置babel-loader
+  ```js
+  // webpack.config.js
+  module.exports = {
+    entry: './main.js',
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          use: {
+            loader: "babel-loader",
+            options: {
+              presets: ['@babel/preset-env']
+            }
+          }
+        }
+      ]
+    }
+  };
+  ```
++ 重新编译，mian.js被编译成了普通的for循环
+  ```js
+  (()=>{for(var o=0,l=[1,2,3];o<l.length;o++){var r=l[o];console.log(r)}})();
+  ```
++ 设置webpack 的 mode 为 "development"，为开发调试提供便利，此时代码会被放进eval()
++ 安装 @babel/plugin-transform-react-jsx `npm install --save-dev @babel/plugin-transform-react-jsx`
++ 在webpack.config.js中增加配置
+  ```js
+  module.exports = {
+    entry: "./main.js",
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          use: {
+            loader: "babel-loader",
+            options: {
+              presets: ["@babel/preset-env"],
+              plugins: ["@babel/plugin-transform-react-jsx"],
+            }
+          }
+        }
+      ]
+    },
+    mode: "development"
+  };
+  ```
++ 执行webpack 会发现 `let a = <div></div>`会翻译成了`/React.createElement(\"div\", null);`
+
+### 3. JSX的基本使用方法
