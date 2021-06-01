@@ -110,26 +110,29 @@ markup建立的风格
 + vue 标记语言的parser
 
 ### 2. 为组件添加JSX语法
-1. 新建一个jsx文件夹
-1. 进入jsx, 执行 `npm init`
-1. 安装webpack、webpack-cli `npm install -g npm webpack webpack-cli`  帮助我们把一个普通的JS文件，变成把不同的import、require打包到一起去。
-1. 安装bable-loader `npm install --save-dev webpack babel-loader`     babel可以把一个新版本的 JS 编译成老版本的 JS，这样就可以在更多的老版本的浏览器里取跑了
-1. 创建webpack.config.js
++ 新建一个jsx文件夹
++ 进入jsx, 执行 `npm init`
++ 安装webpack、webpack-cli `npm install -g npm webpack webpack-cli`  帮助我们把一个普通的JS文件，变成把不同的import、require打包到一起去。
++ 安装bable-loader `npm install --save-dev webpack babel-loader`     babel可以把一个新版本的 JS 编译成老版本的 JS，这样就可以在更多的老版本的浏览器里取跑了
++ 创建webpack.config.js
    ```js
    module.exports = {
     entry: './main.js'
-  };
+   };
    ```
-1. 创建main.js
+   
++ 创建main.js
   ```js
   const arr = [1, 2, 3];
   for (let i of arr) {
     console.log(i);
   }
   ```
-1. 执行webpack，生产一个dist目录
+
++ 执行webpack，生产一个dist目录
   ```js
   // 打包压缩后的main.js
   (()=>{const o=[1,2,3];for(let l of o)console.log(l)})();
   ```
-1. 安装bable `npm install --save-dev @babel/core @babel/preset-env` 
+
++ 安装bable `npm install --save-dev @babel/core @babel/preset-env` 
