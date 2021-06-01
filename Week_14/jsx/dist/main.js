@@ -1,0 +1,1 @@
+(()=>{const o=[1,2,3];for(let l of o)console.log(l)})();
