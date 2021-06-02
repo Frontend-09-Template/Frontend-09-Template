@@ -183,6 +183,34 @@ markup建立的风格
     mode: "development"
   };
   ```
-+ 执行webpack 会发现 `let a = <div></div>`会翻译成了`/React.createElement(\"div\", null);`
++ 执行webpack 会发现 `let a = <div></div>`会翻译成了`React.createElement(\"div\", null);`
 
 ### 3. JSX的基本使用方法
+
+**@bable/plugin-transform-react-jsx 在 React Classic Runtime中可配置的参数**
++ pragma      string, defaults to `React.createElement`
++ pragmaFrag  string, defaults to `React.Fragment`
+
+可参考：https://babel.dev/docs/en/babel-plugin-transform-react-jsx#react-classic-runtime-1
+
+在webpack.config.js中增加配置, 指定@bable/plugin-transform-react-jsx的参数prama为'createElement'，main.js的编译结果为`var a = createElement(\"div\", null);`
+```js
+module.exports = {
+  entry: "./main.js",
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"],
+            plugins: [["@babel/plugin-transform-react-jsx", {"pragma": "createElement"}]],
+          }
+        }
+      }
+    ]
+  },
+  mode: "development"
+};
+```

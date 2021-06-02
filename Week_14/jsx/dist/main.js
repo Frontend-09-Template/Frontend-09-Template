@@ -15,7 +15,7 @@
   \*****************/
 /***/ (() => {
 
-eval("var arr = [1, 2, 3];\n\nfor (var _i = 0, _arr = arr; _i < _arr.length; _i++) {\n  var i = _arr[_i];\n  console.log(i);\n}\n\nvar a = /*#__PURE__*/React.createElement(\"div\", null);\n\n//# sourceURL=webpack://jsx/./main.js?");
+eval("var arr = [1, 2, 3];\n\nfor (var _i = 0, _arr = arr; _i < _arr.length; _i++) {\n  var i = _arr[_i];\n  console.log(i);\n}\n\nvar a = createElement(\"div\", null);\n\n//# sourceURL=webpack://jsx/./main.js?");
 
 /***/ })
 
