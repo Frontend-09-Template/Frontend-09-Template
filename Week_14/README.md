@@ -254,7 +254,7 @@ function createElement(type, attribute, ...children) {
 document.body.appendChild(a);
 ```
 
-#### 第二步，让webpack正确的编译<Div>
+#### 第二步，让webpack正确的编译`<Div>`
 详见：jsx/main.js
 
 ### 4. 轮播组件
