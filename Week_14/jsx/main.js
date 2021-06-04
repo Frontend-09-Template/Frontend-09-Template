@@ -1,7 +1,8 @@
 function createElement(type, attribute, ...children) {
   let element;
   if (typeof type === "string") {
-    element = document.createElement(type);
+    // element = document.createElement(type);
+    element = new ElementWrapper(type);
   } else {
     element = new type;
   }
@@ -12,7 +13,8 @@ function createElement(type, attribute, ...children) {
   if (children.length > 0) {
     for (let child of children) {
       if (typeof child === "string") {
-        child = document.createTextNode(child);
+        //child = document.createTextNode(child);
+        child = new TextWrapper(child);
       }
       element.appendChild(child);
     }
@@ -30,9 +32,26 @@ class ElementWrapper {
   }
 
   appendChild(child) {
-    this.root.appendChild(child);
+    child.mountTo(this.root);
   }
-  
+
+  mountTo(parent) {
+    parent.appendChild(this.root)
+  }
+}
+
+class TextWrapper {
+  constructor(content) {
+    this.root = document.createTextNode(content);
+  }
+  setAttribute(name, value) {
+    this.root.setAttribute(name, value);
+  }
+
+  appendChild(child) {
+    child.mountTo(this.root);
+  }
+
   mountTo(parent) {
     parent.appendChild(this.root)
   }
@@ -49,23 +68,13 @@ class Div {
   }
 
   appendChild(child) {
-    this.root.appendChild(child);
+    child.mountTo(this.root);
   }
 
   mountTo(parent) {
     parent.appendChild(this.root)
   }
 }
-
-
-
-
-
-
-
-
-
-
 
 
 const arr = [1, 2, 3];

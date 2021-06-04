@@ -99,6 +99,7 @@ Markup set(标签)            JS set           JS change          User Input cha
 + destoryed
 
 **Children**
+
 Content型
 Template型
 
@@ -216,3 +217,44 @@ module.exports = {
   mode: "development"
 };
 ```
+
+#### 第一步，编写一个createElement方法
+
+可以让webpack正确编译
+```js
+let a = <div id="a">
+  <span>e</span>
+  <span>f</span>
+  <span>g</span>
+</div>;
+```
+
+```js
+function createElement(type, attribute, ...children) {
+  let element;
+  if (typeof type === "string") {
+    element = document.createElement(type);
+  } else {
+    element = new type;
+  }
+  
+  for (let name in attribute) {
+    element.setAttribute(name, attribute[name]);
+  }
+  if (children.length > 0) {
+    for (let child of children) {
+      if (typeof child === "string") {
+        child = document.createTextNode(child);
+      }
+      element.appendChild(child);
+    }
+  }
+  return element;
+}
+document.body.appendChild(a);
+```
+
+#### 第二步，让webpack正确的编译<Div>
+详见：jsx/main.js
+
+### 4. 轮播组件
