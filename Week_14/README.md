@@ -91,12 +91,12 @@ Markup set(标签)            JS set           JS change          User Input cha
 ```
 
 **生命周期LifeCycle**
-create
-mount
-unmount
-render
-update   userInput Change
-destoryed
++ create
++ mount 组件挂载到DOM树上
++ JS change/set 和 End userInput Change 接受JS或终端用户的输入
++ render/update  重新渲染或更新组件状态
++ unmount 组件从DOM树上解除挂载
++ destoryed
 
 **Children**
 Content型
@@ -108,6 +108,8 @@ Template型
 markup建立的风格
 + react JSX
 + vue 标记语言的parser
+
+JSX是依赖于babel的一个插件来实现的，JSX的行为类似于语法糖，把html转化为createElement的JS函数，JSX的主要作用就是将JS中的HTMl转译为JS，并其封装DOM操作(createElement)。
 
 ### 2. 为组件添加JSX语法
 + 新建一个jsx文件夹
