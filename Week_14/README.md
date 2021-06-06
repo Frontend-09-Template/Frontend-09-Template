@@ -164,7 +164,7 @@ JSX是依赖于babel的一个插件来实现的，JSX的行为类似于语法糖
   (()=>{for(var o=0,l=[1,2,3];o<l.length;o++){var r=l[o];console.log(r)}})();
   ```
 + 设置webpack 的 mode 为 "development"，为开发调试提供便利，此时代码会被放进eval()
-+ 安装 @babel/plugin-transform-react-jsx `npm install --save-dev @babel/plugin-transform-react-jsx`
++ 安装 @babel/plugin-transform-react-jsx `npm install --save-dev @babel/plugin-transform-react-jsx` 这个插件默认会把 JSX 语法转为 React.createElement处理，如果我们不想用这个默认的语法，可以自己通过配置进行定义
 + 在webpack.config.js中增加配置
   ```js
   module.exports = {
@@ -187,6 +187,7 @@ JSX是依赖于babel的一个插件来实现的，JSX的行为类似于语法糖
   };
   ```
 + 执行webpack 会发现 `let a = <div></div>`会翻译成了`React.createElement(\"div\", null);`
++ 在默认的打包输出目录 dist 目录新建一个 main.html，script引入打包后的main.js
 
 ### 3. JSX的基本使用方法
 
@@ -258,3 +259,4 @@ document.body.appendChild(a);
 详见：jsx/main.js
 
 ### 4. 轮播组件
+最终代码详见： jsx-carousel-04
