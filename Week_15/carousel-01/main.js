@@ -1,11 +1,12 @@
 import { Component, createElement } from './framework.js';
 import { Carousel } from './carousel.js';
-import { Timeline } from './animation.js';
+import { Timeline, Animation } from './animation.js';
 
 let d = [
-  'https://pics5.baidu.com/feed/63d0f703918fa0eccf953e747b90c5e63d6ddb0d.jpeg?token=7d2d3d9497b0b8bea9319988a84d5375',
-  'https://pics5.baidu.com/feed/a044ad345982b2b767accc3b6daa57e776099b2a.jpeg?token=d7296f48c6b65020fc3a246a7a9f3715',
-  'https://pics5.baidu.com/feed/38dbb6fd5266d016f413188605774f0f34fa35ff.jpeg?token=48e1d7d0851b89495f8d8b5f296ac5bc',
+  'https://ssyerv1.oss-cn-hangzhou.aliyuncs.com/picture/9c8e4afbe8174349ad8bf3a0d4cac457.jpg!sswm',
+  'https://ssyerv1.oss-cn-hangzhou.aliyuncs.com/picture/28a123ce2b1f472192e6f5b020d528f1.jpg!sswm',
+  'https://ssyerv1.oss-cn-hangzhou.aliyuncs.com/picture/e52b83a736524e6191ddcb84835c688c.jpg!sswm',
+  'https://ssyerv1.oss-cn-hangzhou.aliyuncs.com/picture/fde5b608f8fa4611947c6b224080aeeb.jpg!sswm'
 ];
 
 
@@ -14,4 +15,6 @@ let a = <Carousel src={d} />;
 a.mountTo(document.body);
 
 let tl = new Timeline();
+let am = new Animation({}, "a", 0, 100, 1000, null);
+tl.add(am);
 tl.start();

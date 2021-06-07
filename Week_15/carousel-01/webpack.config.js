@@ -16,5 +16,11 @@ module.exports = {
       }
     ]
   },
-  mode: "development"
+  mode: "development",
+  devServer: {
+    open: true,
+    progress: true,
+    port: 8080,
+    contentBase: './dist'
+  }
 };
