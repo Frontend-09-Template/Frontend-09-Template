@@ -34,6 +34,8 @@ JS里处理帧的方案：
 将tick函数进一步放封装即得到Timeline类
 + Timeline 拥有 start() 和 add()（管理动画的能力）
 + Animation 拥有 初始化和 更新动画时长的能力
+
 详见carousel-01/animation.js
 
-  ## 2. 设计时间线的更新
+
+## 2. 设计时间线的更新
