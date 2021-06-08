@@ -10,9 +10,16 @@ export class Timeline {
   }
   start(){
     let startTime = Date.now();
-    this[TICK] = () => {   // 调用自身的一个时间函数
+    this[TICK] = () => {           // 调用自身的一个时间函数
+      let t = Date.now() - startTime;
       for (let animation of this[ANIMATION]) {
-        animation.receive(Date.now() - startTime);
+        console.log('animation.duration==', animation.duration);
+        let t0 = t;
+        if (animation.duration < t) {
+          this[ANIMATION].delete(animation);
+          t0 = animation.duration
+        }
+        animation.receive(t0);   // 解决超出范围的问题
       }
       requestAnimationFrame(this[TICK]);   
     }
