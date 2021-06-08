@@ -39,3 +39,8 @@ JS里处理帧的方案：
 
 
 ## 2. 设计时间线的更新
+
++ Animation 的开始时间: 
+  - 关于添加delay属性的两个考虑：
+      + 和CSS animation 的 duration 和 delay类似的设计， 把 Animation 的 delay 放到Timeline里面，在 add animation 的时候添加delay
+      + 存在的问题，就是在 add animation时，时间线已经开始执行了，就会存在 startTime 和 t0(animation.receive(time))不一定一致的问题
