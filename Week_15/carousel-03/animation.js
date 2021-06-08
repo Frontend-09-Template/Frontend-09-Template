@@ -32,7 +32,7 @@ export class Timeline {
         }
         animation.receive(t);   // 解决超出范围的问题
       }
-      requestAnimationFrame(this[TICK]);   
+      this[TICK_HANDLER] = requestAnimationFrame(this[TICK]);   
     }
     this[TICK]();
   }
@@ -45,7 +45,7 @@ export class Timeline {
   // }
   // 暂停
   pause() {
-
+    cancelAnimationFrame(this[TICK_HANDLER]);
   }
   // 恢复
   resume() {
@@ -68,7 +68,7 @@ export class Timeline {
 }
 
 export class Animation {
-  constructor(object, property, startValue, endValue, duration, delay, timingFunction) {
+  constructor(object, property, startValue, endValue, duration, delay, timingFunction, template) {
     this.object = object;
     this.property = property;
     this.startValue = startValue;
@@ -76,9 +76,10 @@ export class Animation {
     this.duration = duration;
     this.timingFunction = timingFunction;
     this.delay = delay;                      // 增加delay属性
+    this.template = template;
   }
   receive(time) {
     let range = this.endValue - this.startValue
-    this.object[this.property] = this.startValue + range * time / this.duration;
+    this.object[this.property] = this.template(this.startValue + range * time / this.duration);
   }
 }
