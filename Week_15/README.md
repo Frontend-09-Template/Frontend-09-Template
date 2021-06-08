@@ -29,4 +29,11 @@ JS里处理帧的方案：
 
   现代浏览器建议用`requestAnimationFrame`函数，因为`setInterval`比较不可控，浏览器到底会不会按照16ms去执行呢，不好说。另外`tick`如果写的不好的话，setTimeout容易发生积压。
 
-  将tick函数进一步放封装即得到Timeline类，详见animation.js
+**动画和时间线的初步建立：**
+
+将tick函数进一步放封装即得到Timeline类
++ Timeline 拥有 start() 和 add()（管理动画的能力）
++ Animation 拥有 初始化和 更新动画时长的能力
+详见carousel-01/animation.js
+
+  ## 2. 设计时间线的更新
