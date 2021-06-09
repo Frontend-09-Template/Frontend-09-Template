@@ -44,6 +44,8 @@ JS里处理帧的方案：
   + 和CSS animation 的 duration 和 delay类似的设计， 把 Animation 的 delay 放到Timeline里面，在 add animation 的时候添加delay
   + 存在的问题，就是在 add animation时，时间线已经开始执行了，就会存在 startTime 和 t0(animation.receive(time))不一定一致的问题
 
+  详见carousel-02/animation.js
+
 ## 3. 给动画添加暂停和重启功能
 + 把 `requestAnimationFrame(this[TICK])` 存起来。
   ```js
@@ -56,4 +58,7 @@ JS里处理帧的方案：
       cancelAnimationFrame(this[TICK_HANDLER]);
     }
   ```
+
 + 重启需要重新的执行tick
+
+详见 carousel-03/animation-demo.js
