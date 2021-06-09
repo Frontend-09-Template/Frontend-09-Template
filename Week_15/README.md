@@ -62,3 +62,11 @@ JS里处理帧的方案：
 + 重启需要重新的执行tick
 
 详见 carousel-03/animation-demo.js
+
+## 4. 完善动画的其他功能
+
+所有用到animation.duration 的地方都要加上 delay, 或者说delay 需要从时间当中扣除，以实现延迟的效果。
+
+timingFunction 是一个关于 0 ~ 1 的 time，返回 0 ~ 1的一个函数。
+
+和三次贝塞尔曲线比较接近的函数。

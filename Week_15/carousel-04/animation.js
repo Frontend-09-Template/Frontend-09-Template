@@ -24,16 +24,19 @@ export class Timeline {
         let t;
         if (this[START_TIME].get(animation) < startTime) {
           // 在动画添加之后开始时间线
-          t = now - startTime - this[PAUSE_TIME];
+          t = now - startTime - this[PAUSE_TIME] - animation.delay;
         } else {
-          t = now - this[START_TIME].get(animation) - this[PAUSE_TIME];
+          t = now - this[START_TIME].get(animation) - this[PAUSE_TIME] - animation.delay;
         }
 
-        if (animation.duration < t) {
+        if (animation.duration + animation.delay < t) {
           this[ANIMATION].delete(animation);
           t = animation.duration;
         }
-        animation.receive(t);   // 解决超出范围的问题
+
+        if (t > 0) {
+          animation.receive(t);   // 解决超出范围的问题
+        }
       }
       this[TICK_HANDLER] = requestAnimationFrame(this[TICK]);   
     }
@@ -85,6 +88,7 @@ export class Animation {
   }
   receive(time) {
     let range = this.endValue - this.startValue;
-    this.object[this.property] = this.template(this.startValue + range * time / this.duration);
+    let process = this.timingFunction(time / this.duration);
+    this.object[this.property] = this.template(this.startValue + range * process);
   }
 }
