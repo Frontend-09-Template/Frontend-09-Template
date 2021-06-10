@@ -1,3 +1,5 @@
+import { linear } from "./ease";
+
 const TICK = Symbol("tick");
 const TICK_HANDLER = Symbol("tick-handler");
 const ANIMATION = Symbol("animation");
@@ -77,6 +79,8 @@ export class Timeline {
 
 export class Animation {
   constructor(object, property, startValue, endValue, duration, delay, timingFunction, template) {
+    timingFunction = timingFunction || linear;
+    template = template || (v => v);
     this.object = object;
     this.property = property;
     this.startValue = startValue;
