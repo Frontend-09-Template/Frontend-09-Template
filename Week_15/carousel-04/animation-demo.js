@@ -1,10 +1,14 @@
 import { Timeline, Animation } from './animation.js';
+import { ease } from './ease.js';
 
 let tl = new Timeline();
 tl.start();
 
-let am = new Animation(document.querySelector("#el").style, "transform", 0, 500, 2000, 0, null, v => `translateX(${v}px)`);
+let am = new Animation(document.querySelector("#el").style, "transform", 0, 500, 2000, 0, ease, v => `translateX(${v}px)`);
 tl.add(am);
+
+document.querySelector("#el2").style.transition = 'transform 2s ease';
+document.querySelector("#el2").style.transform = 'translateX(500px)';
 
 document.querySelector("#pause-btn").addEventListener("click", () => {
   tl.pause();

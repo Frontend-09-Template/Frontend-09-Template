@@ -10,11 +10,15 @@ const PAUSE_TIME = Symbol("pause-time");
 export class Timeline {
   constructor() {
     // 做变量的触发
-    
+    this.state = "inited";
     this[ANIMATION] = new Set();   // 把 animation 放入这个 Set里面
     this[START_TIME] = new Map();
   }
   start(){
+    if (this.state !== "inited") {
+      return;
+    }
+    this.state = "started";
     let startTime = Date.now();
     this[PAUSE_TIME] = 0;
     this[TICK] = () => {           // 调用自身的一个时间函数
@@ -53,18 +57,33 @@ export class Timeline {
   // }
   // 暂停
   pause() {
+    if (this.state !== "started") {
+      return;
+    }
+    this.state = "paused";
     this[PAUSE_START] = Date.now();
     cancelAnimationFrame(this[TICK_HANDLER]);
   }
   // 恢复
   resume() {
+    if (this.state !== "paused") {
+      return;
+    }
+    this.state = "started";
     this[PAUSE_TIME] += Date.now() - this[PAUSE_START];
     this[TICK]();
   }
 
   // 重启时间线，清除状态
   reset() {
-
+    this.pause();
+    this.state = "inited";
+    // let startTime = Date.now();
+    this[PAUSE_TIME] = 0;
+    this[ANIMATION] = new Set();   // 把 animation 放入这个 Set里面
+    this[START_TIME] = new Map();
+    this[PAUSE_START] = 0;
+    this[TICK_HANDLER] = null;
   }
 
   // 管理动画
