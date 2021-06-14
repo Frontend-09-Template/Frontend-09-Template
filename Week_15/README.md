@@ -89,6 +89,204 @@ timingFunction 是一个关于 0 ~ 1 的 time，返回 0 ~ 1的一个函数。
 ```
 
 ## 5. 对时间线进行状态管理
-增加代码的健壮性  this.state
+增加代码的健壮性  `this.state`
++ inited
++ started
++ paused
 
 4,5 小节详见 carousel-04
+
+## 6. 手势的基本知识
+
+统一触屏和手机的体验，对鼠标和触屏操作进行区分
+
+**手势的基本知识**
+
+```markdown
+start -- end --> tap
+start -- 移动10px --> pan start -- move --> pan -- end --> pan end 表示一个缓慢的视点的推移
+                                           pan -- move --> pan
+                                           pan -- end 且速度>? --> flick
+start -- 0.5s --> press start -- 移动 10px --> pan start
+                              -- end --> press end
+```
+
+## 7. 实现鼠标操作
+```js
+// 代表HTML元素
+let element = document.documentElement;
+
+
+element.addEventListener("mousedown", event => {
+  start(event);
+
+  let mousemove = event => {
+    move(event);
+  };
+  let mouseup = event => {
+    end(event);
+    element.removeEventListener("mousemove", mousemove);
+    element.removeEventListener("mouseup", mouseup);
+  };
+  element.addEventListener("mousemove", mousemove);
+  element.addEventListener("mouseup", mouseup);
+});
+
+
+element.addEventListener("touchstart", event => {
+  for (let touch of event.changedTouches) {
+    start(touch);
+  }
+});
+
+element.addEventListener("touchmove", event => {
+  for (let touch of event.changedTouches) {
+    move(touch);
+  }
+});
+
+element.addEventListener("touchend", event => {
+  for (let touch of event.changedTouches) {
+    end(touch);
+  }
+});
+
+element.addEventListener("touchcancel", event => {
+  for (let touch of event.changedTouches) {
+    cancel(touch);
+  }
+});
+
+let start = (point) => {
+  console.log("start", point.clientX);
+};
+
+let move = (point) => {
+  console.log("move", point.clientX);
+};
+
+let end = (point) => {
+  console.log("end", point.clientX);
+};
+
+let cancel = (point) => {
+  console.log("cancel", point.clientX);
+};
+```
+
+## 8. 实现手势的逻辑
+```js
+// 代表HTML元素
+let element = document.documentElement;
+
+element.addEventListener("mousedown", event => {
+  start(event);
+
+  let mousemove = event => {
+    move(event);
+  };
+  let mouseup = event => {
+    end(event);
+    element.removeEventListener("mousemove", mousemove);
+    element.removeEventListener("mouseup", mouseup);
+  };
+  element.addEventListener("mousemove", mousemove);
+  element.addEventListener("mouseup", mouseup);
+});
+
+
+element.addEventListener("touchstart", event => {
+  for (let touch of event.changedTouches) {
+    start(touch);
+  }
+});
+
+element.addEventListener("touchmove", event => {
+  for (let touch of event.changedTouches) {
+    move(touch);
+  }
+});
+
+element.addEventListener("touchend", event => {
+  for (let touch of event.changedTouches) {
+    end(touch);
+  }
+});
+
+element.addEventListener("touchcancel", event => {
+  for (let touch of event.changedTouches) {
+    cancel(touch);
+  }
+});
+
+let handler;
+let startX, startY;
+let isPan = false, isTap = true, isPress = false;
+
+let start = (point) => {
+  // console.log("start", point.clientX);
+
+  startX = point.clientX, startY = point.clientY;
+  
+  isTap = true;
+  isPan = false;
+  isPress = false;
+
+  handler = setTimeout(() => {
+    isTap = false;
+    isPan = false;
+    isPress = true;
+    handler = null;
+    console.log("pressstart");
+  }, 500);
+};
+
+let move = (point) => {
+  let dx = point.clientX - startX, dy = point.clientY - startY;
+
+  if(!isPan && dx ** 2 + dy ** 2 > 100) {
+    isTap = false;
+    isPan = true;
+    isPress = false;
+    console.log("panstart");
+    clearTimeout(handler);
+  };
+
+  if (isPan) {
+    console.log(dx, dy);
+    console.log("pan");
+  }
+  console.log("move", point.clientX);
+};
+
+let end = (point) => {
+  if (isTap) {
+    console.log("tap");
+    clearTimeout(handler);
+  }
+  if (isPan) {
+    console.log("panend");
+  }
+  if (isPress) {
+    console.log("pressend");
+  }
+  console.log("end", point.clientX);
+};
+
+let cancel = (point) => {
+  clearTimeout(handler);
+  console.log("cancel", point.clientX);
+};
+
+```
+
+详见 gesture-02/gesture.js
+
+## 9. 处理鼠标事件
+详见 gesture-03/gesture.js
+
+
+## 10. 派发事件
+
+## 11. 实现一个Flick事件
+
