@@ -1,7 +1,30 @@
-<script src="./gesture.js"></script>
 <body oncontextmenu="event.preventDefault()"></body>
-<script>
-  document.documentElement.addEventListener("tap", () => {
-    console.log("tap event trigger");
-  })
+<script type="module">
+    // 使用http-server运行本地服务器后打开测试
+    import {enableGesture} from './gesture.js';
+    enableGesture(document.documentElement);
+    document.documentElement.addEventListener('tap',(event)=>{
+        console.log('tap event trigger',event)
+    })
+    document.documentElement.addEventListener('panstart',(event)=>{
+        console.log('panstart event trigger',event)
+    })
+    document.documentElement.addEventListener('pan',(event)=>{
+        console.log('pan event trigger',event)
+    })
+    document.documentElement.addEventListener('panend',(event)=>{
+        console.log('panend event trigger',event)
+    })
+    document.documentElement.addEventListener('press',(event)=>{
+        console.log('press event trigger',event)
+    })
+    document.documentElement.addEventListener('pressend',(event)=>{
+        console.log('pressend event trigger',event)
+    })
+    document.documentElement.addEventListener('flick',(event)=>{
+        console.log('flick event trigger',event)
+    })
+    document.documentElement.addEventListener('cacel',(event)=>{
+        console.log('flick event trigger',event)
+    })
 </script>
