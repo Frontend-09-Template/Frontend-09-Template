@@ -82,6 +82,11 @@ export class Recognizer {
   }
   start (point, context){
     context.startX = point.clientX, context.startY = point.clientY;
+    
+    this.dispatcher.dispatch("start", {
+      clientX: point.clientX,
+      clientY: point.clientY,
+    }); // 触发自定义事件press
 
     context.points = [ // 记录当前的时间和点坐标
       {
@@ -112,20 +117,20 @@ export class Recognizer {
       context.isPan = true;
       context.isVertical = Math.abs(dx) < Math.abs(dy);
       this.dispatcher.dispatch("panstart", {// 触发自定义事件panstart
-        startX:context.startX,
-        startY:context.startY,
-        clientX:point.clientX,
-        clientX:point.clientX,
+        startX: context.startX,
+        startY: context.startY,
+        clientX: point.clientX,
+        clientY: point.clientY,
         isVertical: context.isVertical
       });
       clearTimeout(context.handler); // 清除press事件触发的定时器
     }
     if (context.isPan) {
       this.dispatcher.dispatch("pan", {// 触发自定义事件pan
-        startX:context.startX,
-        startY:context.startY,
-        clientX:point.clientX,
-        clientX:point.clientX,
+        startX: context.startX,
+        startY: context.startY,
+        clientX: point.clientX,
+        clientY: point.clientY,
         isVertical: context.isVertical
       });
     }
@@ -165,8 +170,8 @@ export class Recognizer {
       this.dispatcher.dispatch("flick", {// 触发自定义事件flick
         startX:context.startX,
         startY:context.startY,
-        clientX:point.clientX,
-        clientX:point.clientX,
+        clientX: point.clientX,
+        clientY: point.clientY,
         isVertical: context.isVertical,
         isFlick: context.isFlick,
         velocity:v //速度
@@ -177,10 +182,10 @@ export class Recognizer {
 
     if (context.isPan) {
       this.dispatcher.dispatch("panend", {// 触发自定义事件panend
-        startX:context.startX,
-        startY:context.startY,
-        clientX:point.clientX,
-        clientX:point.clientX,
+        startX: context.startX,
+        startY: context.startY,
+        clientX: point.clientX,
+        clientY: point.clientY,
         isVertical: context.isVertical,
         isFlick: context.isFlick
       });

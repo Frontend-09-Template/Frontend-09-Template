@@ -115,7 +115,7 @@ export class Recognizer {
         startX:context.startX,
         startY:context.startY,
         clientX:point.clientX,
-        clientX:point.clientX,
+        clientY:point.clientY,
         isVertical: context.isVertical
       });
       clearTimeout(context.handler); // 清除press事件触发的定时器
@@ -125,7 +125,7 @@ export class Recognizer {
         startX:context.startX,
         startY:context.startY,
         clientX:point.clientX,
-        clientX:point.clientX,
+        clientY:point.clientY,
         isVertical: context.isVertical
       });
     }
@@ -166,7 +166,7 @@ export class Recognizer {
         startX:context.startX,
         startY:context.startY,
         clientX:point.clientX,
-        clientX:point.clientX,
+        clientY:point.clientY,
         isVertical: context.isVertical,
         isFlick: context.isFlick,
         velocity:v //速度
@@ -180,7 +180,7 @@ export class Recognizer {
         startX:context.startX,
         startY:context.startY,
         clientX:point.clientX,
-        clientX:point.clientX,
+        clientY:point.clientY,
         isVertical: context.isVertical,
         isFlick: context.isFlick
       });
