@@ -24,9 +24,24 @@ export class Carousel extends Component{
     // 给root注册enableGesture
     enableGesture(this.root);
 
+    // 初始化时间线
+    let timeline = new Timeline();
+    timeline.start();
+
     let children = this.root.children;
 
     let position = 0;  // 记录当前处于哪一张图（0~4）
+
+    let t = 0;
+    let ax = 0;
+    let handler;
+
+    this.root.addEventListener("start", event => {
+      timeline.pause();
+      clearInterval(handler);
+      let progress = (Date.now() - t) / 1500;
+      ax = ease(progress) * 500 - 500;
+    });
 
     this.root.addEventListener("pan", event => {
       let x = event.clientX - event.startX;
