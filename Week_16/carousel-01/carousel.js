@@ -58,14 +58,17 @@ export class Carousel extends Component{
     });
 
     this.root.addEventListener("panend", event => {
-      let x = event.clientX - event.startX- ax; // 计算鼠标拖动的距离(往左划x为负)
-        position = position - Math.round(x / 500);  // 拖动的距离如果超过图片的一半宽度就移动到下一个图片，没超过一半则显示当前的图片
-        for(let offset of [0, - Math.sign(Math.round(x / 500) - x + 250 * Math.sign(x))]){  
-          let pos = position + offset; // 计算当前是哪个图片，可能为负值，所以要把负值转为正值
-          pos = (pos + children.length) % children.length; // 把-1转为3，-2转为2，-3转为1
-          children[pos].style.transition = ""; // 加上css动画
-          children[pos].style.transform = `translateX(${ - pos * 500 + offset * 500}px)`;
-        }
+      timeline.reset();
+
+      let x = event.clientX - event.startX - ax;
+      let current = position - (x - x % 500) / 500; // x - x % 500的值一定是500的倍数（自己把自己多余的给减去）
+
+      for(let offset of [-1, 0, 1]){  
+        let pos = current + offset;  // 计算当前是哪个图片，可能为负值，所以要把负值转为正值
+        pos = (pos % children.length + children.length) % children.length;  // 把-1转为3，-2转为2，-3转为1
+        children[pos].style.transition = "none";   // 取消动画
+        children[pos].style.transform = `translateX(${ - pos * 500 + offset * 500 + x % 500}px)`;
+      }
     });
 
     let nextPicture = () => {
