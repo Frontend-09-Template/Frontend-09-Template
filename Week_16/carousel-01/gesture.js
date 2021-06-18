@@ -187,9 +187,20 @@ export class Recognizer {
         clientX: point.clientX,
         clientY: point.clientY,
         isVertical: context.isVertical,
-        isFlick: context.isFlick
+        isFlick: context.isFlick,
+        velocity: v //速度
       });
     }
+
+    this.dispatcher.dispatch("end", {// 触发自定义事件panend
+      startX: context.startX,
+      startY: context.startY,
+      clientX: point.clientX,
+      clientY: point.clientY,
+      isVertical: context.isVertical,
+      isFlick: context.isFlick,
+      velocity: v //速度
+    });
   }
   cancel (event){
     clearTimeout(context.handler);// 清除press事件触发的定时器

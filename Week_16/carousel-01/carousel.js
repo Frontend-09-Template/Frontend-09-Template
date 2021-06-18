@@ -40,7 +40,7 @@ export class Carousel extends Component{
     this.root.addEventListener("start", event => {
       timeline.pause();
       clearInterval(handler);
-      let progress = (Date.now() - t) / 1500;   // 计算动画时间的进度
+      let progress = (Date.now() - t) / 500;   // 计算动画时间的进度
       ax = ease(progress) * 500 - 500;
     });
 
@@ -54,21 +54,52 @@ export class Carousel extends Component{
         children[pos].style.transition = "none";   // 取消动画
         children[pos].style.transform = `translateX(${ - pos * 500 + offset * 500 + x % 500}px)`;
       }
-      console.log(event.clientX - event.startX);
     });
 
-    this.root.addEventListener("panend", event => {
+    this.root.addEventListener("end", event => {
       timeline.reset();
+      timeline.start();   // 重新启动时间线
+      handler = setInterval(nextPicture, 3000);
+
+      // 添加flick的逻辑
 
       let x = event.clientX - event.startX - ax;
       let current = position - (x - x % 500) / 500; // x - x % 500的值一定是500的倍数（自己把自己多余的给减去）
 
+      let direction = Math.round((x % 500) / 500);  // 值为 -1、0、1
+
+      if (event.isFlick) {
+        if (event.velocity < 0) {
+          direction = Math.ceil((x % 500) / 500);
+        } else {
+          direction = Math.floor((x % 500) / 500);
+        }
+        console.log(event.velocity);
+      }
+
       for(let offset of [-1, 0, 1]){  
         let pos = current + offset;  // 计算当前是哪个图片，可能为负值，所以要把负值转为正值
         pos = (pos % children.length + children.length) % children.length;  // 把-1转为3，-2转为2，-3转为1
+
         children[pos].style.transition = "none";   // 取消动画
-        children[pos].style.transform = `translateX(${ - pos * 500 + offset * 500 + x % 500}px)`;
+
+        // 添加动画
+        let a = new Animation(
+          children[pos].style, 
+          "transform", 
+          (- pos * 500 + offset * 500 + x % 500), 
+          (- pos * 500 + offset * 500 + direction % 500), 
+          500, 
+          0, 
+          ease, 
+          v => `translateX(${v}px)`
+        );
+        
+        timeline.add(a);
+        
       }
+      position = position - ((x - x % 500) / 500) - direction;
+      position = (position % children.length + children.length) % children.length; // 矫正position
     });
 
     let nextPicture = () => {
@@ -86,8 +117,8 @@ export class Carousel extends Component{
       // next.style.transform = `translateX(${500 - nextIndex * 500}px)`;   // 矫正偏移
 
       // 添加动画
-      let a = new Animation(current.style, "transform", (-position * 500), (-500 - position * 500), 1500, 0, ease, v => `translateX(${v}px)`);
-      let a_next = new Animation(next.style, "transform", (500 - nextIndex * 500), (-nextIndex * 500), 1500, 0, ease, v => `translateX(${v}px)`);
+      let a = new Animation(current.style, "transform", (-position * 500), (-500 - position * 500), 500, 0, ease, v => `translateX(${v}px)`);
+      let a_next = new Animation(next.style, "transform", (500 - nextIndex * 500), (-nextIndex * 500), 500, 0, ease, v => `translateX(${v}px)`);
       timeline.add(a);
       timeline.add(a_next);
       position = nextIndex;

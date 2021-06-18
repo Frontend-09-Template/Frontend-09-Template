@@ -24,7 +24,7 @@ export class Timeline {
     this[TICK] = () => {           // 调用自身的一个时间函数
       let now = Date.now();
       for (let animation of this[ANIMATION]) {
-        console.log('animation.duration==', animation.duration);
+        // console.log('animation.duration==', animation.duration);
         // 在动画开始之后
         
         let t;
