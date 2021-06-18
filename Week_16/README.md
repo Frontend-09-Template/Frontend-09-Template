@@ -69,3 +69,12 @@ this.dispatcher.dispatch("start", {
 }); // 触发自定义事件press
 ```
 详见： carousel-01/guesture.js 
+
+## 2. 为组件添加更多属性
+
+carousel render 函数中有许多函数级作用域变量：
++ timeline 用来播放动画
++ handler 用来播放定时，三秒钟一帧的技术
++ children 保存图片
++ position 代表当前滚动的位置，代表了一种状态，用户可能通过代码强行更改 position
++ t和ax  不同的事件之间去通讯所使用的的局部的状态
