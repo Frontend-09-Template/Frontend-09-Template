@@ -70,7 +70,7 @@ this.dispatcher.dispatch("start", {
 ```
 详见： carousel-01/guesture.js 
 
-## 2. 为组件添加更多属性
+## 2. 为组件添加更多属性(一)
 
 carousel render 函数中有许多函数级作用域变量：
 + timeline 用来播放动画
@@ -78,3 +78,12 @@ carousel render 函数中有许多函数级作用域变量：
 + children 保存图片
 + position 代表当前滚动的位置，代表了一种状态，用户可能通过代码强行更改 position
 + t和ax  不同的事件之间去通讯所使用的的局部的状态
+
+所以提取STATE和ATTRIBUTE，以及加入事件机制
+详见 carousel-02
+
+## 3. 为组件添加更多属性（二）
+
+内容型的children和模版型children的区别：
++ 内容型的children，放几个children就会实现几个children，普通的children直接在模版里写。
++ JSX模版型的children是通过在children里放函数的形式去实现的。

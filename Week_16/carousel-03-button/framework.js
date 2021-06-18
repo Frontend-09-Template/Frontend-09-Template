@@ -50,10 +50,15 @@ export class Component {
   triggerEvent(type, args) {
     this[ATTRIBUTE]["on" + type.replace(/^[\s\S]/, s=> s.toUpperCase())](new CustomEvent(type, { detail: args }));
   }
+
+  render() {
+    return this.root;
+  }
 }
 
 class ElementWrapper extends Component{
   constructor(type) {
+    super();
     this.root = document.createElement(type);
   }
   
@@ -61,6 +66,7 @@ class ElementWrapper extends Component{
 
 class TextWrapper extends Component{
   constructor(content) {
+    super();
     this.root = document.createTextNode(content);
   }
   

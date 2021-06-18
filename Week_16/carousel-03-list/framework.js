@@ -10,15 +10,22 @@ export function createElement(type, attribute, ...children) {
   for (let name in attribute) {
     element.setAttribute(name, attribute[name]);
   }
-  if (children.length > 0) {
+
+  let processChildren = (children) => {
     for (let child of children) {
+      if (typeof child === "object" && (child instanceof Array)) {
+        processChildren(child);
+        continue;
+      }
       if (typeof child === "string") {
         //child = document.createTextNode(child);
         child = new TextWrapper(child);
       }
       element.appendChild(child);
     }
-  }
+  };
+
+  processChildren(children);
   return element;
 }
 
@@ -50,17 +57,28 @@ export class Component {
   triggerEvent(type, args) {
     this[ATTRIBUTE]["on" + type.replace(/^[\s\S]/, s=> s.toUpperCase())](new CustomEvent(type, { detail: args }));
   }
+
+  render() {
+    return this.root;
+  }
 }
 
 class ElementWrapper extends Component{
   constructor(type) {
+    super();
     this.root = document.createElement(type);
+  }
+
+  setAttribute(name, value) {
+    // this[ATTRIBUTE][name] = value;
+    this.root.setAttribute(name, value);
   }
   
 }
 
 class TextWrapper extends Component{
   constructor(content) {
+    super();
     this.root = document.createTextNode(content);
   }
   

@@ -1,7 +1,8 @@
 import { Component, createElement } from './framework.js';
-import { Carousel } from './carousel.js';
+import { Carousel } from './Carousel.js';
+import { Button } from './Button.js';
 import { Timeline, Animation } from './animation.js';
-
+/*
 let d = [
   {
     img: 'https://static001.geekbang.org/resource/image/bb/21/bb38fb7c1073eaee1755f81131f11d21.jpg',
@@ -27,5 +28,8 @@ let a = <Carousel
           onChange={event => console.log(event.detail.position)}
           onClick={event => window.location.href = event.detail.data.url}
         />;
-
+*/
+let a = <Button>
+  content
+</Button>;
 a.mountTo(document.body);

@@ -40,8 +40,12 @@ export class Carousel extends Component{
     this.root.addEventListener("start", event => {
       timeline.pause();
       clearInterval(handler);
-      let progress = (Date.now() - t) / 500;   // 计算动画时间的进度
-      ax = ease(progress) * 500 - 500;
+      if (Date.now() - t < 1500) {
+        let progress = (Date.now() - t) / 1500;   // 计算动画时间的进度
+        ax = ease(progress) * 500 - 500;
+      } else {
+        ax = 0;
+      }
     });
 
     this.root.addEventListener("pan", event => {
