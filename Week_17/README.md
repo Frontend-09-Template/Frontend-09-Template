@@ -46,6 +46,119 @@ C:\Program Files\nodejs\node_modules\generator-toolchain -> E:\cicicode\Frontend
 + 全局安装`npm install -g yo`,然后执行yeoman `yo toolchain`，可以正确的执行。
 
 
+### 1.2 设计generator的流程
+
++ 支持同步的method和async method
++ this.log 支持输出
++ this.prompt 支持用户输入，进行信息收集： https://yeoman.io/authoring/user-interactions.html
+```js
+module.exports = class extends Generator {
+  constructor(args, opts) {
+    // Calling the super constructor is important so our generator is correctly set up
+    super(args, opts);
+  }
+
+  // 通过命令行与用户交互实现
+  async prompting() {
+    const answers = await this.prompt([
+      {
+        type: "input",
+        name: "name",
+        message: "Your project name",
+        default: this.appname // Default to current folder name
+      },
+      {
+        type: "confirm",
+        name: "cool",
+        message: "Would you like to enable the Cool feature?"
+      }
+    ]);
+
+    this.log("app name", answers.name);
+    this.log("cool feature", answers.cool);
+  }
+};
+```
++ 文件模板系统：https://yeoman.io/authoring/file-system.html 要初始化一个项目，通常需要和文件系统做交互
+  - 创建generators/app/templates目录，增加模板页t.html
+  - 使用 `copyTpl`方法，复制模板文件
+  ```js
+  var Generator = require('yeoman-generator');
+
+  module.exports = class extends Generator {
+    constructor(args, opts) {
+      // Calling the super constructor is important so our generator is correctly set up
+      super(args, opts);
+    }
+
+    initPackage() {
+      const pkgJson = {
+        devDependencies: {
+          eslint: '^3.15.0'
+        },
+        dependencies: {
+          react: '^16.2.0'
+        }
+      };
+
+      // Extend or create package.json file in destination path
+      this.fs.extendJSON(this.destinationPath('package.json'), pkgJson);
+      this.npmInstall();
+    }
+
+    async step1() {
+      this.fs.copyTpl(
+        this.templatePath('t.html'),
+        this.destinationPath('public/index.html'),
+        { title: 'Templating with Yeoman' }
+      );
+    }
+  };
+  ```
+  - 新建一个空文件 demo, 然后执行`yo toolchain`，生成 public/index.html文件
++ yeoman依赖：https://yeoman.io/authoring/dependencies.html 对npm系统进行了一个包装，让它更易用
+  ```js
+  var Generator = require('yeoman-generator');
+
+  module.exports = class extends Generator {
+    constructor(args, opts) {
+      // Calling the super constructor is important so our generator is correctly set up
+      super(args, opts);
+    }
+
+    initPackage() {
+      const pkgJson = {
+        devDependencies: {
+          eslint: '^3.15.0'
+        },
+        dependencies: {
+          react: '^16.2.0'
+        }
+      };
+
+      // Extend or create package.json file in destination path
+      this.fs.extendJSON(this.destinationPath('package.json'), pkgJson);
+      this.npmInstall();
+    }
+
+    async step1() {
+      this.fs.copyTpl(
+        this.templatePath('t.html'),
+        this.destinationPath('public/index.html'),
+        { title: 'Templating with Yeoman' }
+      );
+    }
+  };
+  ```
+
+  详见 toolchain和demo
+
+### 1.3 生成vue-generator
+
+不使用vue-cli，而使用webapck和vue的loader等。完整的实现一个generator，可以初始化项目。
+
+
+
 
 
 
