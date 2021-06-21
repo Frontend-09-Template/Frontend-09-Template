@@ -1,0 +1,16 @@
+{
+  "name": "generator-toolchain",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "files": [
+    "app"
+  ],
+  "dependencies": {
+    "yeoman-generator": "^5.3.0"
+  }
+}
