@@ -157,6 +157,11 @@ module.exports = class extends Generator {
 
 不使用vue-cli，而使用webapck和vue的loader等。完整的实现一个generator，可以初始化项目。
 
+主要步骤：
++ 初始化包，package.json，并安装依赖: vue,vue-loader,webpack。使用`npm link`和切换到新建vue-demo项目，使用`yo vue`命令验证实现情况。
++ 配置模板，vue 单文件组件：https://cn.vuejs.org/v2/guide/single-file-components.html
++ 配置webpack.config.js， copy-webpack-plugin: https://webpack.js.org/plugins/copy-webpack-plugin/#root
+
 
 
 
