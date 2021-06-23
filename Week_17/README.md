@@ -162,6 +162,10 @@ module.exports = class extends Generator {
 + 配置模板，vue 单文件组件：https://cn.vuejs.org/v2/guide/single-file-components.html
 + 配置webpack.config.js， copy-webpack-plugin: https://webpack.js.org/plugins/copy-webpack-plugin/#root
 
+详见 generator-vue和vue-demo
+
+
+
 
 
 
