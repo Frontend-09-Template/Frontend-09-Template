@@ -207,7 +207,7 @@ babel全局命令：babel，需要一个输入和输出 `babel .src/sample.js > 
 ```
 {
   "presets": ["@bable/preset-env", "@babel/preset-react"],
-  plugins: ["@babel/plugin-transform-react-jsx"],
+  "plugins": ["@babel/plugin-transform-react-jsx"],
 }
 ```
 
