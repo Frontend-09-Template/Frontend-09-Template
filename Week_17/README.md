@@ -164,6 +164,53 @@ module.exports = class extends Generator {
 
 详见 generator-vue和vue-demo
 
+## 2. build工具
+
+对于一个工具链来说，初始化之后毫无一问就是要build它了。build同时为开发和发布服务的基础设施，可以说是必须要掌握的一种能力。
+
+**webpack**
+
+最初是为node设计的，可以把node的代码打包成一个浏览器可用的代码。最初的设计上就是完全针对JS的系统。基于JS打包。所以它的核心思路是打包出来JS，然后在html中引用这个JS。后面也出现后起之秀，基于html打包，配置上要求就没有那么高。
+
+webapck能做什么？多文件合并，在合并过程中，通过各种loader和plugin，去控制合并的规则和对文本进行转换。
+
+
+webpack的config: webpack.config.js
++ 是一个JS 的形式，通过config去改变webpack命令的一些行为。
++ 使用webpack一般需要安装两个包：`webpack`和`webpack-cli`提供webpack的命令。
+  - 全局安装webpack-cli: `npm install -g webpack webpack-cli` 可以全局使用webpack命令。
+  - 项目里安装： `npx webpack`, `npm install webpack-cli --save-dev`
+
+
+webpack的常用概念：
++ entry
++ output
++ loader
+  - webpack的灵魂，如`bable-loader`,`css-loader`,`view-loader`
+  - 一个loader的作用就是把source变成一个目标的代码，可以认为是纯粹的文本转换器。webpack会根据我们所有转换出来的，import出来的语句，或者require函数，把对应的文件给加载出来。
+  - 通过test规则来决定什么样的后缀名的文件，使用什么样的loader。也可以使用多个loader,去处理同一个文件。
++ plugin
+
+
+**babel基本知识**
+
+babel是完全独立于webpack的一个独立的系统。它的作用是把一个新版本的JS编译成一个老版本的JS的版本。
+
+
+安装babel:
++ 全局安装：`npm install -g @babel/core @babel/cli`
++ 本地安装：`npm install -save-dev @babel/core @babel/cli`
+
+babel全局命令：babel，需要一个输入和输出 `babel .src/sample.js > 1.txt`
+
+配置: .babelrc JSON的形式
+```
+{
+  "presets": ["@bable/preset-env", "@babel/preset-react"],
+  plugins: ["@babel/plugin-transform-react-jsx"],
+}
+```
+
 
 
 
