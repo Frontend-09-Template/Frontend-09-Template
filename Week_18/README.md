@@ -24,6 +24,34 @@ mocha是一个功能丰富的javascript测试框架，运行在node.js和浏览�
 
 **配置**
 
++ 写一个简单的加法函数，然后配置test/test.js去做测试。
+```js
+function add(a, b) {
+  return a + b;
+}
+
+module.exports = add;
+```
+
+```js
+// test.js
+var assert = require('assert');
+
+var add = require('../add.js');
+
+describe("add function testing", function(){
+  it('1+2 should be 3', function() {
+    assert.equal(add(1,2), 3);
+  });
+  
+  it('-1+2 should be -3', function() {
+    assert.equal(add(-5,2), -3);
+  });
+});
+
+```
+
++ 然后执行`macha`命令测试通过。
 
 
 coverage相关的工具
