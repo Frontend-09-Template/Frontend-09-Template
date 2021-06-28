@@ -113,7 +113,8 @@ istanbuljs，它的命令行工具就叫nyc。地址：https://www.npmjs.com/pac
 
 |--------|---------|----------|---------|---------|-------------------|
 |File    | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s |
-|Files |     100 |      100 |     100 |     100 ||add.js |     100 |      100 |     100 |     100 |
+|Files |     100 |      100 |     100 |     100 | -- |
+|add.js |     100 |      100 |     100 |     100 | -- |
 
 
 
