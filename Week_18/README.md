@@ -53,5 +53,67 @@ describe("add function testing", function(){
 
 + 然后执行`macha`命令测试通过。
 
+**解决以node模式exports的问题**
 
-coverage相关的工具
+一个简单的思路就是使用webpack，然后以build后dist目录里的内容进行单元测试。但是测试依赖build并不太好。同时，如果后面做code coverage相关的工作，依赖dist里面的内容的话，又增加了一些麻烦。
+
+
+babel解决方案：使用babel register。只需要require一下就可以使用了。
+
++ 首先安装@babel/core和@babel/register两个模块。
+```
+npm install --save-dev @babel/core @babel/register
+```
+
++ babel的config文件
+安装 `npm install @babel/preset-env --save-dev`
+```
+{
+  "presets": ["@babel/preset-env"]
+}
+```
+
++ 将module.exports/require方式改为export/import
+
++ 然后执行`mocha --require @babel/register` 或 `、./node_modules/.bin/mocha --require @babel/register` 成功
+
++ 将命令放入package.json scripts里面
+```
+  "scripts": {
+    "test": "mocha --require @babel/register"
+  },
+```
+
+## code coverage
+
+code coverage 是单元测试的一个重要的指标。 表示我们的测试到底覆盖了多少原文件里的代码。mocha里天然是没有这个工具的，需要其他工具配合使用。
+
++ test case写的好不好
++ 有没有测全
+
+**code coverage相关的工具:nyc**
+
+istanbuljs，它的命令行工具就叫nyc。地址：https://www.npmjs.com/package/nyc
+
+它可以帮我们在一个复杂的文件里面，计算最终测试覆盖的比例。
+
+
+
++ 安装 `npm i -D nyc or yarn add -D nyc`
+
++ 增加 scripts:
+```
+  "scripts": {
+    "test": "mocha --require @babel/register",
+    "coverage": "nyc npm run test"
+  },
+```
+
++ 执行：`npm run coverage`
+
+--------|---------|----------|---------|---------|-------------------File    | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+--------|---------|----------|---------|---------|-------------------...iles |     100 |      100 |     100 |     100 |                   
+ add.js |     100 |      100 |     100 |     100 |                   
+--------|---------|----------|---------|---------|-------------------
+
+

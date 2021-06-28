@@ -1,5 +1,9 @@
-function add(a, b) {
+export const add = (a, b) => {
   return a + b;
 }
 
-module.exports = add;
+export const mul = (a, b) => {
+  return a * b;
+}
+
+// module.exports = add;
