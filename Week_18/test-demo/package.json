@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --require @babel/register",
-    "coverage": "nyc npm run test"
+    "coverage": "nyc npm run test",
+    "nyc": "nyc mocha"
   },
   "author": "",
   "license": "ISC",
@@ -13,6 +14,8 @@
     "@babel/core": "^7.14.6",
     "@babel/preset-env": "^7.14.7",
     "@babel/register": "^7.14.5",
+    "@istanbuljs/nyc-config-babel": "^3.0.0",
+    "babel-plugin-istanbul": "^6.0.0",
     "mocha": "^9.0.1",
     "nyc": "^15.1.0"
   }

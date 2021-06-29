@@ -116,7 +116,26 @@ istanbuljs，它的命令行工具就叫nyc。地址：https://www.npmjs.com/pac
 |Files |     100 |      100 |     100 |     100 |  |
 |add.js |     100 |      100 |     100 |     100 |  |
 
-+ 为了更好的支持babel提高准确度，增加.nycrc配置
++ 为了更好的支持babel提高准确度，增加.nycrc配置，安装 @istanbuljs/nyc-config-babel 参见：https://www.npmjs.com/package/@istanbuljs/nyc-config-babel
+```
+// .nycrc
+{
+    "extends": "@istanbuljs/nyc-config-babel"
+}
+```
+
++ 安装babel-plugin-istanbul: `npm install -D babel-plugin-istanbul` 并添加到bablerc的plugin里，参见：https://www.npmjs.com/package/babel-plugin-istanbul
+```
+{
+  "presets": ["@babel/preset-env"],
+  "plugins": ["istanbul"]
+}
+```
+
+以上详见test-demo
+
+
+
 
 
 
