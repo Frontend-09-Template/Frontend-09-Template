@@ -12,17 +12,17 @@
 + Jest
 
 
-## Mocha
+## 1. Mocha
 
 mocha是一个功能丰富的javascript测试框架，运行在node.js和浏览器中，使异步测试变得简单有趣。Mocha测试连续运行，允许灵活和准确的报告，同时将未捕获的异常映射到正确的测试用例。
 
-**安装**
+**1.1 安装**
 
 - 新建test-demo空文件夹
 - 执行npm init
 - 然后执行 `npm install --global mocha` or `npm install --save-dev mocha`
 
-**配置**
+**1.2 配置**
 
 + 写一个简单的加法函数，然后配置test/test.js去做测试。
 ```js
@@ -53,7 +53,7 @@ describe("add function testing", function(){
 
 + 然后执行`macha`命令测试通过。
 
-**解决以node模式exports的问题**
+**1.3 解决以node模式exports的问题**
 
 一个简单的思路就是使用webpack，然后以build后dist目录里的内容进行单元测试。但是测试依赖build并不太好。同时，如果后面做code coverage相关的工作，依赖dist里面的内容的话，又增加了一些麻烦。
 
@@ -84,14 +84,14 @@ npm install --save-dev @babel/core @babel/register
   },
 ```
 
-## code coverage
+## 2. code coverage
 
 code coverage 是单元测试的一个重要的指标。 表示我们的测试到底覆盖了多少原文件里的代码。mocha里天然是没有这个工具的，需要其他工具配合使用。
 
 + test case写的好不好
 + 有没有测全
 
-### code coverage相关的工具——nyc
+### 2.1 code coverage相关的工具——nyc
 
 istanbuljs，它的命令行工具就叫nyc。地址：https://www.npmjs.com/package/nyc
 
@@ -137,5 +137,5 @@ istanbuljs，它的命令行工具就叫nyc。地址：https://www.npmjs.com/pac
 
 
 
-
+## 3. 实践：对html-parser进行单元测试
 
