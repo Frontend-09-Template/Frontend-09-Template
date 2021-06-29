@@ -16,13 +16,13 @@
 
 mocha是一个功能丰富的javascript测试框架，运行在node.js和浏览器中，使异步测试变得简单有趣。Mocha测试连续运行，允许灵活和准确的报告，同时将未捕获的异常映射到正确的测试用例。
 
-**1.1 安装**
+### 1.1 安装
 
 - 新建test-demo空文件夹
 - 执行npm init
 - 然后执行 `npm install --global mocha` or `npm install --save-dev mocha`
 
-**1.2 配置**
+### 1.2 配置
 
 + 写一个简单的加法函数，然后配置test/test.js去做测试。
 ```js
@@ -53,7 +53,7 @@ describe("add function testing", function(){
 
 + 然后执行`macha`命令测试通过。
 
-**1.3 解决以node模式exports的问题**
+### 1.3 解决以node模式exports的问题
 
 一个简单的思路就是使用webpack，然后以build后dist目录里的内容进行单元测试。但是测试依赖build并不太好。同时，如果后面做code coverage相关的工作，依赖dist里面的内容的话，又增加了一些麻烦。
 
