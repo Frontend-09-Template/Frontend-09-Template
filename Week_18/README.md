@@ -139,3 +139,5 @@ istanbuljs，它的命令行工具就叫nyc。地址：https://www.npmjs.com/pac
 
 ## 3. 实践：对html-parser进行单元测试
 
+通过实际的例子来看单元测试对质量的提升有多大的作用。
+
