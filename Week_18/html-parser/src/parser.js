@@ -4,7 +4,7 @@ const EOF = Symbol("EOF"); // EOF: End of File
 let currentToken = null;
 let currentAttribute = null;
 let currentTextNode = null;
-let stack = [{type: "document", children: []}];
+let stack;
 let rules = [];
 
 
@@ -175,7 +175,11 @@ function tagOpen(c) {
     };
     return tagName(c);
   } else {
-    return ;
+    emit({
+      type: "text",
+      content: c
+    })
+    return data;
   }
 }
 
@@ -275,10 +279,8 @@ function doubleQuotedAttributeValue(c) {
 }
 
 function singleQuotedAttributeValue(c) {
-  if (c == "'") {
-    if (currentAttribute) {
-      currentToken[currentAttribute.name] = currentAttribute.value;
-    }
+  if (c == "\'") {
+    currentToken[currentAttribute.name] = currentAttribute.value;
     return afterQuotedAttributeValue;
   } else if (c == "\u0000") {
 
@@ -302,11 +304,8 @@ function UnquotedAttributeValue(c) {
     }
     return selfClosingStartTag;
   } else if (c == ">") {
-    if (currentAttribute) {
-      currentToken[currentAttribute.name] = currentAttribute.value;
-    }
+    currentToken[currentAttribute.name] = currentAttribute.value;
     emit(currentToken);
-    currentAttribute = null;
     return data;
   } else if (c == "\u0000") {
 
@@ -335,8 +334,7 @@ function afterQuotedAttributeValue(c) {
   } else if (c == EOF) {
 
   } else {
-    currentAttribute.value += c;
-    return doubleQuotedAttributeValue;
+    throw new Error("unexpected charater \"" + c + "\"");
   }
 }
 
@@ -354,8 +352,8 @@ function selfClosingStartTag(c) {
   } else if (c == EOF) {
     
   } else {
-    currentAttribute.value += c;
-    return doubleQuotedAttributeValue;
+    // currentAttribute.value += c;
+    // return doubleQuotedAttributeValue;
   }
 }
 
@@ -364,8 +362,6 @@ function afterAttributeName(c) {
     return afterAttributeName;
   } else if (c == "/") {
     return selfClosingStartTag;
-  } else if (c == "=") {
-    return beforeAttributeValue;
   } else if (c == ">") {
     if (currentAttribute) {
       if (currentAttribute) {
@@ -392,6 +388,11 @@ function afterAttributeName(c) {
 }
 
 export function parseHTML(html) {
+  stack = [{type: "document", children: []}];
+  currentToken = null;
+  currentAttribute = null;
+  currentTextNode = null;
+
   let state = data;
   for (let c of html) {
     state = state(c);

@@ -147,3 +147,15 @@ istanbuljs，它的命令行工具就叫nyc。地址：https://www.npmjs.com/pac
 + 将test-demo里package.json里的依赖包与scripts拷贝到当前目录下的package.json中
 + 将test-demo目录下的.babelrc和.nycrc同时拷贝到当前目录
 + 创建test目录，同时在test目录下创建parser-test.js
+  ```
+  var assert = require('assert');
+
+  import { parseHTML } from '../src/parser.js';
+
+  describe("parseHTML function testing", function(){
+    it('<a>abc</a>', function() {
+      parseHTML('<a>abc</a>');
+      assert.equal(1, 1);
+    });
+  });
+  ```
