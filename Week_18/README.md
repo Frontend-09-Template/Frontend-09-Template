@@ -141,7 +141,9 @@ istanbuljs，它的命令行工具就叫nyc。地址：https://www.npmjs.com/pac
 
 通过实际的例子来看单元测试对质量的提升有多大的作用。
 
-将之前课程的parser.js拷贝到新建文件夹html-parser\src，并修改module.exports为export。
-
-进入到html-parser目录
+新建文件夹，进入到html-parser目录
++将之前课程的parser.js拷贝到html-parser\src，并修改module.exports为export。
 + 执行`npm init`
++ 将test-demo里package.json里的依赖包与scripts拷贝到当前目录下的package.json中
++ 将test-demo目录下的.babelrc和.nycrc同时拷贝到当前目录
++ 创建test目录，同时在test目录下创建parser-test.js
