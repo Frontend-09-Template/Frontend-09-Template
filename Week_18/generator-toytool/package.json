@@ -1,0 +1,16 @@
+{
+  "name": "generator-toytool",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "files": [
+    "app"
+  ],
+  "dependencies": {
+    "yeoman-generator": "^4.13.0"
+  }
+}

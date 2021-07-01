@@ -158,6 +158,53 @@ istanbuljs，它的命令行工具就叫nyc。地址：https://www.npmjs.com/pac
       assert.equal(1, 1);
     });
   });
+  ...
   ```
 
-  详见： html-parser
+  详见： html-parser/test/parser-test.js
+
+## 4. 所有工具与generator的集成
+
+将第17周的generator-vue拷贝到本周目录，重命名为generator-toytool，然后集成测试框架和coverage，都跑起来。
+
++ 首先，修改index.js的package.json设置
+```js
+this.npmInstall(['mocha', 'nyc'], { 'save-dev': true });   // 安装最新版本的mocha,nyc
+this.npmInstall(['@babel/core', 'babel-loader', '@babel/preset-env', '@babel/register', 'babel-plugin-istanbul'], { 'save-dev': true });   // 安装babel系列
+this.npmInstall(['@istanbuljs/nyc-config-babel'], { 'save-dev': true });   // 安装istanbuljs系列
+```
++ 将html-parser里的.babelrc和.nycrc拷贝过来，放到template目录下，并在index.js里添加fs的拷贝。
+```js
+this.fs.copyTpl(
+  this.templatePath('.babelrc'),
+  this.destinationPath('.babelrc'),
+);
+this.fs.copyTpl(
+  this.templatePath('.nycrc'),
+  this.destinationPath('.nycrc'),
+);
+```
+
++ 新建sample-test.js并编写测试用例, 添加到copy。
+```js
+this.fs.copyTpl(
+  this.templatePath('sample-test.js'),
+  this.destinationPath('test/sample-test.js'),
+);
+```
+
++ webpack里加上js的babel-loader
+
++ 增加scripts
+```js
+"scripts": {
+    "build": "webpack",
+    "test": "mocha --require @babel/register",
+    "coverage": "nyc mocha --require @babel/register"
+  },
+```
+
++ 执行 `npm link`
++ 新建toytool-demo目录，进入并执行`yo toytool`, 安装成功后执行`npm test` 提示成功。然后执行`npm run coverage` 和 `npm build` 可以得到coverage和build成功。
+
+以上详见 generator-toytool 和 toytool-demo
