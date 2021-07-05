@@ -14,7 +14,8 @@
 
 ### 在VirtualBox下安装Ubuntu Server
 - 前期准备: 下载安装VirtualBox（ https://www.virtualbox.org/wiki/Downloads）和Ubuntu Server镜像（https://ubuntu.com/download/server）
-- 首先在VirturalBox中创造一个虚拟机，点击新建，输入： Node Server；环境选择Linux\Ubuntu 64\2G内存\10G硬盘 动态分配
+- 首先在VirturalBox中创造一个虚拟机，点击新建，输入： Node Server；
+- 环境选择Linux\Ubuntu 64\2G内存\10G硬盘-动态分配
 - 启动： 选择光盘镜像——ubuntu-20.04.2-live-server-amd64.iso
 - 选择语言类型为英语,不用代理,镜像地址修改一下,用默认的ubuntu.com会比较慢: mirrors.aliyun.com/ubuntu
 - 其他设备选项不用修改
