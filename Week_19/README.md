@@ -80,6 +80,7 @@ sudo npm install -g n
 - 要copy 22这个端口
   + 22这个端口是不会直接给虚拟机的在虚拟机里先设置一下端口转发
   + 选择设置-网络-高级-端口转发，添加一条规则：主机端口选一个不太会冲突的8022，子系统端口选22，这样宿主机上的8022端口会被转发到虚拟机上的22端口，可以用它做登录。
+  ![](https://github.com/ChengYiFan/Frontend-09-Template/tree/main/Week_19/img/setport.png)
 - 创建目录：/home/cici/server
 - 进入到server项目目录，写scp命令
   + 一般的scp命令在mac电脑上都是有的，如果是别的环境的话，想办法装一下scp这个命令。
