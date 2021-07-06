@@ -80,28 +80,36 @@ sudo npm install -g n
 - 要copy 22这个端口
   + 22这个端口是不会直接给虚拟机的在虚拟机里先设置一下端口转发
   + 选择设置-网络-高级-端口转发，添加一条规则：主机端口选一个不太会冲突的8022，子系统端口选22，这样宿主机上的8022端口会被转发到虚拟机上的22端口，可以用它做登录。
+
   <div align="center">
     <img src="./img/setport.png" width = "500" alt="setport" align=center />
   </div>
+
 - 创建目录：/home/cici/server
 - 进入到server项目目录，写scp命令
   + 一般的scp命令在mac电脑上都是有的，如果是别的环境的话，想办法装一下scp这个命令。
   + 执行 `scp -P 8022 -r ./* cici@127.0.0.1:/home/cici/server` 从8022端口拷贝本目录下的所有资源到虚拟机。出现auth的时候就说明连接成功了。输入虚拟机上的密码。就完成了拷贝。
+
   <div align="center">
     <img src="./img/copyfile.png" width = "500" alt="setport" align=center />
   </div>
+
   <div align="center">
     <img src="./img/copyfile2.png" width = "500" alt="setport" align=center />
   </div>
+
   + 可以拷贝完整的node_modules目录保持线上和线下的一致，也可以利用package-lock.json策略重新npm install。部署策略这里不再讨论。
 - 在虚拟机上的server目录，执行一下`npm start`命令，服务启动起来了。监听的是3000端口。
 - 针对虚拟机，再配置一个服务的端口映射。
   + 点击设置 -网络-高级-端口转发-添加一条规则：主机端口8080，子系统端口3000。
   + 在浏览器中输入http://localhost:8080/， 可以看到服务正常启动，能够访问了。
   + http://localhost:8080/stylesheets/style.css 也可以正常从访问
+
   <div align="center">
     <img src="./img/serverSus.png" width = "500" alt="setport" align=center />
   </div>
+
+  
 这样就完成了一个纯粹的静态服务系统
 
 # 二、实现发布系统
