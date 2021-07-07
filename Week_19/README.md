@@ -110,6 +110,59 @@ sudo npm install -g n
   </div>
 
   
-这样就完成了一个纯粹的静态服务系统
+这样就完成了一个纯粹的静态服务系统 详见 server目录
 
 # 二、实现发布系统
+发布系统是由一个发布的服务器端和一个发布工具，它是由这样一对的项目来构成的。
+
+## 1. 实现简单的发布工具和发布服务器
+先写基本的功能，然后逐渐的扩展，让它变成一个工程上面基本可用的这样的一个东西。先搭出来基本的架子。
+
++ 创建两个新的项目 publish-server和publish-tool
+  - publish-server 负责向真实的server去拷贝自己的文件，去发送我们想要发布的文件
++ 分别 init 以上两个项目 执行 `npm init` 
+
+### 1.1 实现简单的 publish-server
++ publish-server 也可以用express或者koa这样的比较流行的框架，因为我们没有太多界面展示工作，所以就用纯粹的HTTP API
++ 创建server.js
+  ```js
+  let http = require('http');
+
+  http.createServer(function(req, res) {
+    console.log(req);
+    res.end("Hello world");
+  }).listen(8082);
+  ```
++ 执行`node ./server.js` 在浏览器中访问 http://localhost:8082/ 可以正常访问
+
+### 1.2 实现简单的publish-tool
++ 创建publish.js
+  ```js
+  let http = require('http');
+
+  // 第一个参数是options，第二个参数是response
+  let request = http.request({
+    hostname: "127.0.0.1",
+    port: 8082
+  }, response => {
+    console.log(response);
+  });
+
+  // 这个时候请求才真正的出去
+  request.end();
+  ```
+  - 这里的response其实是一个流式的返回，现在http发送和接收的内容都非常短，都是流式处理的。所以你可能会觉得很麻烦，但是我们要做的就是要利用流式的特性，因为我们要发布的未必是一个体积很小的东西。流式处理能帮助我们，让我们计算机的效率达成最高。
++ 执行`node publish.js` 可以正常的启动, 可以看到publish-server启动的服务的确收到了request请求。这样我们客户端和服务端的基础代码就有了。
+
+
+## 2. 实现发布服务器
+
+发布系统肯定是要把文件通过HTTP的方式把它传给我们的发布服务器，那么publish-tool 到 publish-server 之间的传输就是一个典型的流式传输。
+
+Node.js里面的流：不管我们把文件读出来，还是最后走网络的request response 以及最后到服务器，我们从服务端的 request 里面去读取这个数据，然后写到服务端的文件系统里，整个这个过程都是需要了解流式传输的。
++ 分两部分：
+  - 一种是可读的流。
+    + 也就是说可以用Node.js的代码从流里面获取数据，因为一个流一个stream，它肯定是一个对象，主要用它的两个事件：Event: 'close'和 Event: 'data
+    + 当我们得到了一个流，比如说是一个文件流的时候，我们从这个文件里是逐步的去读取数据出来的。
+    + 根据对stream的定义，我们是不太关心它每次读出来多少的。这时候就需要监听它的data Event。可能被一次或多次调用，然后来获取文件里面的内容。这种对小文件没有意义，但对大型文件如音视频、大的图片用这种方式处理。
+    
