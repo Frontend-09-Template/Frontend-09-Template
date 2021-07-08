@@ -301,11 +301,11 @@ Node.js里面的流：不管我们把文件读出来，还是最后走网络的r
   });
 
   ```
-  + 重新启动 node server.js 和 node publish.js 这时可以检查到server目录下/public/index.html被替换为最新的了。
++ 重新启动 node server.js 和 node publish.js 这时可以检查到server目录下/public/index.html被替换为最新的了。
 
-  ## 4. 实现发布系统功能完善-实现发布系统部署
+## 4. 实现发布系统功能完善-实现发布系统部署
 
-  + 把部署工作写在 npm的command里面，包括 server 和 publish-server。
++ 把部署工作写在 npm的command里面，包括 server 和 publish-server。
 
   ```js
   // publish-server/package.json
@@ -321,15 +321,15 @@ Node.js里面的流：不管我们把文件读出来，还是最后走网络的r
     "start": "node ./bin/www"
   },
   ```
-  + 同时在虚拟机里启动两个服务： 进入server目录，执行`npm start&` 加&不会阻塞console。
-  + 再在虚拟机上创建publish-server目录。`cd .. `，`mkdir publish-server`
-  + 回到项目publish-server,执行 `npm run publish`,然后输入虚拟机的密码，胜利的传输到了服务器端。
-  + 回到虚拟机publish-server目录，执行`npm start`,这样的话 虚拟机是的两个server都启动了。
-  + 因为用了8082端口，所以还是要再配一个端口转发。8882->8082
++ 同时在虚拟机里启动两个服务： 进入server目录，执行`npm start&` 加&不会阻塞console。
++ 再在虚拟机上创建publish-server目录。`cd .. `，`mkdir publish-server`
++ 回到项目publish-server,执行 `npm run publish`,然后输入虚拟机的密码，胜利的传输到了服务器端。
++ 回到虚拟机publish-server目录，执行`npm start`,这样的话 虚拟机是的两个server都启动了。
++ 因为用了8082端口，所以还是要再配一个端口转发。8882->8082
   <div align="center">
     <img src="./img/add8882port.png" width = "500" alt="setport" align=center />
   </div>
-  + 修改一下publish-tool 发布的端口地址，改到8882发到虚拟机上。
++ 修改一下publish-tool 发布的端口地址，改到8882发到虚拟机上。
     ```js
     // 第一个参数是options，第二个参数是response
     let request = http.request({
@@ -343,8 +343,8 @@ Node.js里面的流：不管我们把文件读出来，还是最后走网络的r
       console.log(response);
     });
     ```
-  + 修改sample.html，然后重新发一下，`node publish.js`
-  + 可以看到数据成功更新了。现在基本上了解了发布系统是如何工作得了。
++ 修改sample.html，然后重新发一下，`node publish.js`
++ 可以看到数据成功更新了。现在基本上了解了发布系统是如何工作得了。
   <div align="center">
     <img src="./img/publishSus.png" width = "500" alt="setport" align=center />
   </div>
