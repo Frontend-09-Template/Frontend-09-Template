@@ -155,7 +155,7 @@ sudo npm install -g n
 + 执行`node publish.js` 可以正常的启动, 可以看到publish-server启动的服务的确收到了request请求。这样我们客户端和服务端的基础代码就有了。
 
 
-## 2. 实现发布服务器
+## 2. 实现发布系统功能完善-实现流式传输
 
 发布系统肯定是要把文件通过HTTP的方式把它传给我们的发布服务器，那么publish-tool 到 publish-server 之间的传输就是一个典型的流式传输。
 
@@ -165,4 +165,187 @@ Node.js里面的流：不管我们把文件读出来，还是最后走网络的r
     + 也就是说可以用Node.js的代码从流里面获取数据，因为一个流一个stream，它肯定是一个对象，主要用它的两个事件：Event: 'close'和 Event: 'data
     + 当我们得到了一个流，比如说是一个文件流的时候，我们从这个文件里是逐步的去读取数据出来的。
     + 根据对stream的定义，我们是不太关心它每次读出来多少的。这时候就需要监听它的data Event。可能被一次或多次调用，然后来获取文件里面的内容。这种对小文件没有意义，但对大型文件如音视频、大的图片用这种方式处理。
+
+    ```js
+    // 修改publish.js
+    let fs = require('fs');
+
+    // 创建文件的流 vs readFile()
+    let file = fs.createReadStream("./package.json");
+
+    // 监听on('data')事件
+    file.on('data', chunk => {
+      console.log(chunk.toString());
+    });
+
+    file.on('end', () => {
+      console.log("read finished");
+    });
+    ```
+    执行`node publish.js`可以顺利得到package.json里面的内容。
+
+  - 另一种是writeStream，可写的流。
+    + client端的request的流就是一个只能写的流，读不出来东西。
+    + 而有些流呢，可以支持一边读 一边写。
+    + node的 writable的stream最重要就是write方法，就是往里写一个数据。还有一个end方法，对应流的结束，表示已经写完了。
+    + write不是一个同步的API，它其实是有callback的，但是可以连续调用，排序，会把buffer起来。Event: 'drain'表示已经把调用write写的数据全写完了。
+    + http的request的请求也是流式，所以可以携带比较大的数据。下面演示用request发送流式的文件。
+    ```js
+    let http = require('http');
+    let fs = require('fs');
+
+    // 第一个参数是options，第二个参数是response
+    let request = http.request({
+      hostname: "127.0.0.1",
+      port: 8082,
+      method: "post",
+      headers: {
+        'Content-Type': 'application/octet-stream',
+      }
+    }, response => {
+      console.log(response);
+    });
+
+    // 这个时候请求才真正的出去
+    // request.end();
+
+
+    // 创建文件的流 vs readFile()
+    let file = fs.createReadStream("./package.json");
+
+    // 监听on('data')事件
+    file.on('data', chunk => {
+      console.log(chunk.toString());
+      request.write(chunk);
+    });
+
+    file.on('end', (chunk) => {
+      console.log("read finished");
+      request.end(chunk);
+    });
+    ```
+    + 服务端的request也是一个流，是个readable的流。接收一个incomingMessage的接口
+    ```js
+    let http = require('http');
+
+    http.createServer(function(req, res) {
+      console.log(req.headers);
+      req.on('data', chunk => {
+        console.log(chunk);
+      })
+      req.on('end', chunk => {
+        res.end("success");
+      })
+      
+    }).listen(8082);
+    ```
+    + 分别启动node server.js和node publish.js可以看到请求被正确的响应了。
+
+
+## 3. 实现发布系统功能完善-实现文件写入
     
++ 修改server.js 实现文件的写入
+  ```js
+  let http = require('http');
+  let fs = require('fs');
+
+  http.createServer(function(req, res) {
+    console.log(req.headers);
+
+    let outFile = fs.createWriteStream("../server/public/index.html");
+
+    req.on('data', chunk => {
+      outFile.write(chunk);
+    })
+    req.on('end', () => {
+      outFile.end();
+      res.end("success");
+    })
+    
+  }).listen(8082);
+  ```
+
++ 修改publish.js 请求读sample.html
+  ```js
+  let http = require('http');
+  let fs = require('fs');
+
+  // 第一个参数是options，第二个参数是response
+  let request = http.request({
+    hostname: "127.0.0.1",
+    port: 8082,
+    method: "post",
+    headers: {
+      'Content-Type': 'application/octet-stream',
+    }
+  }, response => {
+    console.log(response);
+  });
+
+  // 这个时候请求才真正的出去
+  // request.end();
+
+
+  // 创建文件的流 vs readFile()
+  let file = fs.createReadStream("./sample.html");
+
+  // 监听on('data')事件
+  file.on('data', chunk => {
+    console.log(chunk.toString());
+    request.write(chunk);
+  });
+
+  file.on('end', (chunk) => {
+    console.log("read finished");
+    request.end(chunk);
+  });
+
+  ```
+  + 重新启动 node server.js 和 node publish.js 这时可以检查到server目录下/public/index.html被替换为最新的了。
+
+  ## 4. 实现发布系统功能完善-实现发布系统部署
+
+  + 把部署工作写在 npm的command里面，包括 server 和 publish-server。
+
+  ```js
+  // publish-server/package.json
+  "scripts": {
+    "start": "node ./server.js",
+    "publish": "scp -P 8022 -r ./* cici@127.0.0.1:/home/cici/publish-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+
+  // server/package.json
+  "scripts": {
+    "publish": "scp -P 8022 -r ./* cici@127.0.0.1:/home/cici/server",
+    "start": "node ./bin/www"
+  },
+  ```
+  + 同时在虚拟机里启动两个服务： 进入server目录，执行`npm start&` 加&不会阻塞console。
+  + 再在虚拟机上创建publish-server目录。`cd .. `，`mkdir publish-server`
+  + 回到项目publish-server,执行 `npm run publish`,然后输入虚拟机的密码，胜利的传输到了服务器端。
+  + 回到虚拟机publish-server目录，执行`npm start`,这样的话 虚拟机是的两个server都启动了。
+  + 因为用了8082端口，所以还是要再配一个端口转发。8882->8082
+  <div align="center">
+    <img src="./img/add8882port.png" width = "500" alt="setport" align=center />
+  </div>
+  + 修改一下publish-tool 发布的端口地址，改到8882发到虚拟机上。
+    ```js
+    // 第一个参数是options，第二个参数是response
+    let request = http.request({
+      hostname: "127.0.0.1",
+      port: 8882,
+      method: "post",
+      headers: {
+        'Content-Type': 'application/octet-stream',
+      }
+    }, response => {
+      console.log(response);
+    });
+    ```
+  + 修改sample.html，然后重新发一下，`node publish.js`
+  + 可以看到数据成功更新了。现在基本上了解了发布系统是如何工作得了。
+  <div align="center">
+    <img src="./img/publishSus.png" width = "500" alt="setport" align=center />
+  </div>
+

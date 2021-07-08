@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node ./server.js",
+    "publish": "scp -P 8022 -r ./* cici@127.0.0.1:/home/cici/publish-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
