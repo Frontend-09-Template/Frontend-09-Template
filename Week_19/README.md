@@ -303,7 +303,7 @@ Node.js里面的流：不管我们把文件读出来，还是最后走网络的r
   ```
 + 重新启动 node server.js 和 node publish.js 这时可以检查到server目录下/public/index.html被替换为最新的了。
 
-## 4. 实现发布系统功能完善-实现发布系统部署
+## 4. 实现发布系统功能完善-实现发布系统部署，单文件上传发布
 
 + 把部署工作写在 npm的command里面，包括 server 和 publish-server。
 
@@ -349,3 +349,185 @@ Node.js里面的流：不管我们把文件读出来，还是最后走网络的r
     <img src="./img/publishSus.png" width = "500" alt="setport" align=center />
   </div>
 
+
+## 5. 实现发布系统功能完善-多文件发布
+
+到现在我们已经实现从文件到HTTP，再从HTTP到文件的流式的传输，通过对流式传输的学习，已经可以把文件传输做成可以进行单文件上传。
+
+
+通常在工具链里发布都不是发布一个文件，即多文件发布。这需要用到Node压缩方面的包。一个是Archiver： https://www.npmjs.com/package/archiver ;一个是unzipper: https://www.npmjs.com/package/unzipper 是一个输出流
+
+Node.js Stream文档：https://nodejs.org/docs/latest-v13.x/api/stream.html#stream_readable_streams
+
+readable.pipe(destination[, options])是一个比较重要的方法，能够把一个可读的流导入到可写的流里面。流处理有一些比较麻烦的地方，比如写的时候要考虑它是否drain。读的时候倒是没有特别多的问题。但是要去监听事件也是非常麻烦。想把一个流导进另一个流的时候就可以简单的一次性的调用pipe方法。
+
+### 1. 把代码改成pipe风格
+
+**1.1 修改publish.js，使用pipe方法去比较快捷的去处理。**
+
+```js
+let http = require('http');
+let fs = require('fs');
+
+// 第一个参数是options，第二个参数是response
+let request = http.request({
+  hostname: "127.0.0.1",
+  port: 8882,
+  method: "post",
+  headers: {
+    'Content-Type': 'application/octet-stream',
+  }
+}, response => {
+  console.log(response);
+});
+
+
+// 创建文件的流 vs readFile()
+let file = fs.createReadStream("./sample.html");
+
+file.pipe(request);
+
+file.on('end', () => request.end());
+```
+
+**1.2修改publish-server/server.js,同样用pipe处理**
+```js
+let http = require('http');
+let fs = require('fs');
+
+http.createServer(function(req, res) {
+
+  let outFile = fs.createWriteStream("../server/public/index.html");
+
+  req.pipe(outFile);
+  
+}).listen(8082);
+```
+
+
+### 2 修改publish.js 获取文件大小的API： fs.stat
+```js
+let http = require('http');
+let fs = require('fs');
+
+fs.stat("./sample.html", (err, states) => {
+  // 第一个参数是options，第二个参数是response
+  let request = http.request({
+    hostname: "127.0.0.1",
+    port: 8882,
+    method: "post",
+    headers: {
+      'Content-Type': 'application/octet-stream',
+      'Content-Length': states.size
+    }
+  }, response => {
+    console.log(response);
+  });
+
+
+  // 创建文件的流 vs readFile()
+  let file = fs.createReadStream("./sample.html");
+
+  file.pipe(request);   // 我们需要知道这个request的大小
+
+  file.on('end', () => request.end());
+});
+```
+
+### 3. 多文件场景实现: 通过压缩包实现多文件上传
+
+多文件的场景其实是要把一个文件夹里面的文件去压缩。
+
++ 在publish-tool目录中创建sample目录，放入多个文件
++ 安装archiver: `npm install --save archiver`，并在publish.js中引入，压缩目录
+  ```js
+  // 压缩到文件流
+  const archive = archiver('zip', {
+    zlib: { level:9 }
+  });
+  archive.directory('./sample/', false);
+
+  archive.finalize();
+
+  archive.pipe(fs.createWriteStream("tmp.zip")); 
+  ```
++ pipe到request流，服务端
+  ```js
+  // publish.js
+  let http = require('http');
+  let fs = require('fs');
+  let archiver = require('archiver');
+
+  // 第一个参数是options，第二个参数是response
+  let request = http.request({
+    hostname: "127.0.0.1",
+    port: 8882,
+    method: "post",
+    headers: {
+      'Content-Type': 'application/octet-stream',
+      // 'Content-Length': states.size
+    }
+  }, response => {
+    console.log(response);
+  });
+
+  const archive = archiver('zip', {
+    zlib: { level:9 }
+  });
+  archive.directory('./sample/', false);
+
+  archive.finalize();
+ 
+  archive.pipe(request);    // 压缩到request流
+  ```
+
+  ```js
+  // server.js
+  let http = require('http');
+  let fs = require('fs');
+
+  http.createServer(function(req, res) {
+
+    let outFile = fs.createWriteStream("../server/public/tmp.zip");
+
+    req.pipe(outFile);
+  
+  }).listen(8082);
+  ```
+
++ 解压缩，需要用到unzipper,`npm install unzipper` 安装到服务端：publish-server
+  ```js
+  let http = require('http');
+  // let fs = require('fs');
+  let unzipper = require('unzipper');
+
+  http.createServer(function(req, res) {
+
+    // let outFile = fs.createWriteStream("../server/public/tmp.zip");
+    // req.pipe(outFile);
+    // 覆盖式发布
+    req.pipe(unzipper.Extract({ path: '../server/public/' }));
+    
+  }).listen(8082);
+  ```
+
+  # 三、发布系统的登录和鉴权问题
+  实际应用场景中，还涉及到发布鉴权问题，这就涉及到oAuth登录。
+
+  ## 如何使用github oAuth
+
+  + 登录到github，进入settings: https://github.com/settings/apps 
+  + 选择 new github App
+    - name:  cici-geek-toy-publish; 
+    - homepage url: http://localhost; 
+    - callback: http://localhost/auth; 
+    - where can this github app be install? any account
+    - Webhook 不需要勾选active
+    - Expire user authorization tokens 不勾选（用户登录的token要不要过期，不用过期）
+    - 然后提交
+    - 拿到：App ID: 125787  Client ID: Iv1.fc827457a13e560b
+  + github aAuth的API：https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps
+  + 首先publish-tool 进行权限的校验，打开authorize
+  + 然后publish-server需要有一个auth路由，允许在这个路由下去接收code，用code + client_id + client_secret 换 token；然后用token获取用户信息，检查权限；publish 路由接受发布
+    - 比较关键的问题是怎么把换取的token回传给客户端，让client端再启动一个本地服务
+  + 在publish-tool，创建server,接受token,后点击发布

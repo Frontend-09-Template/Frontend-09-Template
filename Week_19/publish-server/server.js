@@ -1,17 +1,12 @@
 let http = require('http');
-let fs = require('fs');
+// let fs = require('fs');
+let unzipper = require('unzipper');
 
 http.createServer(function(req, res) {
-  console.log(req.headers);
 
-  let outFile = fs.createWriteStream("../server/public/index.html");
-
-  req.on('data', chunk => {
-    outFile.write(chunk);
-  })
-  req.on('end', () => {
-    outFile.end();
-    res.end("success");
-  })
+  // let outFile = fs.createWriteStream("../server/public/tmp.zip");
+  // req.pipe(outFile);
+  // 覆盖式发布
+  req.pipe(unzipper.Extract({ path: '../server/public/' }));
   
 }).listen(8082);

@@ -1,32 +1,36 @@
 let http = require('http');
 let fs = require('fs');
+let archiver = require('archiver');
 
-// 第一个参数是options，第二个参数是response
-let request = http.request({
-  hostname: "127.0.0.1",
-  port: 8882,
-  method: "post",
-  headers: {
-    'Content-Type': 'application/octet-stream',
-  }
-}, response => {
-  console.log(response);
-});
+// fs.stat("./sample.html", (err, states) => {
+  // 第一个参数是options，第二个参数是response
+  let request = http.request({
+    hostname: "127.0.0.1",
+    port: 8882,
+    method: "post",
+    headers: {
+      'Content-Type': 'application/octet-stream',
+      // 'Content-Length': states.size
+    }
+  }, response => {
+    console.log(response);
+  });
 
-// 这个时候请求才真正的出去
-// request.end();
+
+  // 创建文件的流 vs readFile()
+  // let file = fs.createReadStream("./sample.html");
 
 
-// 创建文件的流 vs readFile()
-let file = fs.createReadStream("./sample.html");
+  const archive = archiver('zip', {
+    zlib: { level:9 }
+  });
+  archive.directory('./sample/', false);
 
-// 监听on('data')事件
-file.on('data', chunk => {
-  console.log(chunk.toString());
-  request.write(chunk);
-});
+  archive.finalize();
+ 
+  archive.pipe(request);    // 压缩到request流
+  
+  // file.on('end', () => request.end());
+// });
 
-file.on('end', (chunk) => {
-  console.log("read finished");
-  request.end(chunk);
-});
+
