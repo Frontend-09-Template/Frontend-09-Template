@@ -45,3 +45,23 @@
   process.exitCode = 1;
   ```
   此时，git-demo执行git commit 会输出 Hello hooks!
+
+## 3. ESLint的基本用法
+轻量级的检查工具，也是业内基本上都在用的这样一个代码风格检查。官网：https://eslint.org/docs/user-guide/getting-started
+
+**具体使用**
++ 新建eslint-demo目录，执行`npm init`
++ 安装eslint，`npm install eslint --save-dev`
++ 增加eslint配置，`npx eslint --init`
+  - eslint-plugin-jsx-a11y@6.4.1
+  - eslint@7.30.0
+  - eslint-plugin-react@7.24.0
+  - eslint-plugin-react-hooks@4.2.0
+  - eslint-plugin-import@2.23.4
+  - eslint-config-airbnb@18.2.1
++ 执行eslint `npx eslint ./index.js`
++ eslint有各种各样现成写好的规则，也有一些它的preset
+
+## 4. ESLint API及其高级用法
+
+**ESLint 和 git的规则结合**
