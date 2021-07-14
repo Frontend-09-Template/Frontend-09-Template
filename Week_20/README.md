@@ -39,5 +39,9 @@
 + 进入 .git\hooks 目录，新建一个pre-commit, chmod +x ./pre-commit 添加执行权限
   ```
   #!/usr/bin/env node
+  let process = require("process");
   console.log("Hello hooks!")
+
+  process.exitCode = 1;
   ```
+  此时，git-demo执行git commit 会输出 Hello hooks!
