@@ -65,3 +65,67 @@
 ## 4. ESLint API及其高级用法
 
 **ESLint 和 git的规则结合**
+esLint Node.jsAPI： https://eslint.org/docs/developer-guide/nodejs-api
+
++ 拷贝如下代码到hooks/pre-commit
+```
+#!/usr/bin/env node
+let process = require("process");
+const { ESLint } = require("eslint");
+
+(async function main() {
+  // 1. Create an instance with the `fix` option.
+  const eslint = new ESLint({ fix: false });
+
+  // 2. Lint files. This doesn't modify target files.
+  const results = await eslint.lintFiles(["index.js"]);
+
+  // 3. Modify the files with the fixed code.
+  // await ESLint.outputFixes(results);
+
+  // 4. Format the results.
+  const formatter = await eslint.loadFormatter("stylish");
+  const resultText = formatter.format(results);
+
+  // 5. Output it.
+  console.log(resultText);
+
+  for (let result of results) {
+    if (result.errorCount) {
+      process.exitCode = 1;          // 阻止提交
+    }
+  }
+
+})().catch((error) => {
+  process.exitCode = 1;
+  console.error(error);
+});
+```
++ 退到git-demo，创建index.js，并安装eslint,`npm install eslint --save-dev`, 增加eslint配置，`npx eslint --init`
+
+
+## 5. 使用无头浏览器检查DOM
+
+pantomJS 已过于老旧，chrome 推出了一个 Headless 模式，这个是现在比较推荐的最佳实践。官方文档：https://developers.google.com/web/updates/2017/04/headless-chrome?hl=en
+
+Chrome 的 headless 模式是在chrome命令执行之后加headless参数的
+```markdown
+chrome \
+  --headless \                   # Runs Chrome in headless mode.
+  --disable-gpu \                # Temporarily needed if running on Windows.
+  --remote-debugging-port=9222 \
+  https://www.chromestatus.com   # URL to open. Defaults to about:blank.
+```
+首先需要在mac或windows环境下加上chrome的快捷方式
+```markdown
+alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
+alias chrome-canary="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary"
+alias chromium="/Applications/Chromium.app/Contents/MacOS/Chromium"
+```
+
+使用
+```markdown
+chrome --headless --disable-gpu --dump-dom https://www.chromestatus.com/
+```
+
+用node的方式去调用 Puppeteer这个库：https://www.npmjs.com/package/puppeteer
